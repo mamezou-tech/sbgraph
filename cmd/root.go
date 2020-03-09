@@ -9,7 +9,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+
+// Config store settings
+type Config struct {
+	WorkDir string `yaml:"workdir"`
+}
+
 var cfgFile string
+
+var config Config
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -37,7 +45,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.scrapbox-viz.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sbv.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -59,7 +67,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".scrapbox-viz" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".scrapbox-viz")
+		viper.SetConfigName(".sbv")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -67,5 +75,8 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		if err := viper.Unmarshal(&config); err == nil {
+			fmt.Printf("config: %#v\n", config)
+		}
 	}
 }
