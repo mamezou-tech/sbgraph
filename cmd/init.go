@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/util"
+	"github.com/kondoumh/scrapbox-viz/pkg/file"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		project, _ := cmd.PersistentFlags().GetString("project")
 		fmt.Println("init called, project : ", project)
-		if err := filesystem.CreateDir(config.WorkDir); err != nil {
+		if err := file.CreateDir(config.WorkDir); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
