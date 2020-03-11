@@ -14,16 +14,20 @@ var initCmd = &cobra.Command{
 	Short: "initialize directory",
 	Long:  `initalize directory for Scrapbox project`,
 	Run: func(cmd *cobra.Command, args []string) {
-		project, _ := cmd.PersistentFlags().GetString("project")
-		fmt.Println("init called, project : ", project)
-		if err := file.CreateDir(config.WorkDir); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		doInit(cmd)
 	},
 }
 
 func init() {
 	initCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project (required)")
 	rootCmd.AddCommand(initCmd)
+}
+
+func doInit(cmd *cobra.Command) {
+	project, _ := cmd.PersistentFlags().GetString("project")
+	fmt.Println("init called, project : ", project)
+	if err := file.CreateDir(config.WorkDir); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
