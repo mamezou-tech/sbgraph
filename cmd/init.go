@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
+	"github.com/kondoumh/scrapbox-viz/pkg/fetch"
 	"github.com/spf13/cobra"
 )
 
@@ -30,4 +31,21 @@ func doInit(cmd *cobra.Command) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	if err := fetchProject(project); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func fetchProject(project string) error {
+	url := fmt.Sprintf("%s/%s?limit=1", fetch.BaseURL, project)
+	data, err := fetch.FetchData(url)
+	if err != nil {
+		return err
+	}
+
+	if err := file.WriteJSON(project + ".json", data, config.WorkDir); err != nil {
+		return err
+	}
+	return nil
 }

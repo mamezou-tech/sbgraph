@@ -1,6 +1,10 @@
 package file
 
-import "os"
+import (
+	"os"
+	"encoding/json"
+	"bytes"
+)
 
 func CreateDir(path string) error {
 	if f, err := os.Stat(path); os.IsNotExist(err) || !f.IsDir() {
@@ -12,4 +16,19 @@ func CreateDir(path string) error {
 	} else {
 		return nil
 	}
+}
+
+func WriteJSON(fileName string, data []byte, outDir string) error {
+	if _, err := os.Stat(outDir); os.IsNotExist(err) {
+		os.Mkdir(outDir, 0777)
+	}
+	file, err := os.Create(outDir + "/" + fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	var pj bytes.Buffer
+	json.Indent(&pj, []byte(data), "", " ")
+	file.Write(pj.Bytes())
+	return nil
 }
