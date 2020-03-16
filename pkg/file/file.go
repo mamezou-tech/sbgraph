@@ -8,7 +8,7 @@ import (
 
 func CreateDir(path string) error {
 	if f, err := os.Stat(path); os.IsNotExist(err) || !f.IsDir() {
-		if err := os.MkdirAll(path, 0777); err != nil {
+		if err := os.MkdirAll(path, 0775); err != nil {
 			return nil
 		} else {
 			return err
@@ -19,8 +19,9 @@ func CreateDir(path string) error {
 }
 
 func WriteBytes(data []byte, fileName string, outDir string) error {
-	if _, err := os.Stat(outDir); os.IsNotExist(err) {
-		os.Mkdir(outDir, 0775)
+	dir, err := os.Stat(outDir)
+	if os.IsNotExist(err) || !dir.IsDir() {
+		return err
 	}
 	file, err := os.Create(outDir + "/" + fileName)
 	if err != nil {
