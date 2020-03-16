@@ -9,8 +9,6 @@ import (
 func CreateDir(path string) error {
 	if f, err := os.Stat(path); os.IsNotExist(err) || !f.IsDir() {
 		if err := os.MkdirAll(path, 0775); err != nil {
-			return nil
-		} else {
 			return err
 		}
 	} else {
