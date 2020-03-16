@@ -20,7 +20,7 @@ func CreateDir(path string) error {
 
 func WriteJSON(fileName string, data []byte, outDir string) error {
 	if _, err := os.Stat(outDir); os.IsNotExist(err) {
-		os.Mkdir(outDir, 0777)
+		os.Mkdir(outDir, 0775)
 	}
 	file, err := os.Create(outDir + "/" + fileName)
 	if err != nil {
