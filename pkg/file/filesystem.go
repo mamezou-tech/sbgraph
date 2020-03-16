@@ -18,7 +18,7 @@ func CreateDir(path string) error {
 	}
 }
 
-func WriteJSON(fileName string, data []byte, outDir string) error {
+func WriteBytes(data []byte, fileName string, outDir string) error {
 	if _, err := os.Stat(outDir); os.IsNotExist(err) {
 		os.Mkdir(outDir, 0775)
 	}

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/file"
 	"github.com/kondoumh/scrapbox-viz/pkg/fetch"
+	"github.com/kondoumh/scrapbox-viz/pkg/file"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +44,7 @@ func fetchProject(project string) error {
 		return err
 	}
 
-	if err := file.WriteJSON(project + ".json", data, config.WorkDir); err != nil {
+	if err := file.WriteBytes(data, project+".json", config.WorkDir); err != nil {
 		return err
 	}
 	return nil
