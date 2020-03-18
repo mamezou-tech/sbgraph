@@ -11,9 +11,8 @@ func CreateDir(path string) error {
 		if err := os.MkdirAll(path, 0775); err != nil {
 			return err
 		}
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func WriteBytes(data []byte, fileName string, outDir string) error {
