@@ -99,7 +99,8 @@ func fetchPageList(project types.Project) error {
 
 func dividePagesList(multiplicity int, projectName string) ([][]types.Page, error) {
 	var divided [][]types.Page
-	proj, err := readProject(projectName)
+	var proj types.Project
+	err := proj.ReadFrom(projectName, config.WorkDir)
 	if err != nil {
 		return divided, err
 	}
@@ -120,18 +121,6 @@ func dividePagesList(multiplicity int, projectName string) ([][]types.Page, erro
 	}
 	fmt.Printf("Total pages to be fetched %d\n", totalCount)
 	return divided, nil
-}
-
-func readProject(projectName string) (types.Project, error) {
-	bytes, err := file.ReadBytes(projectName+".json", config.WorkDir)
-	var project types.Project
-	if err != nil {
-		return project, err
-	}
-	if err := json.Unmarshal(bytes, &project); err != nil {
-		return project, err
-	}
-	return project, err
 }
 
 func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGroup) error {
