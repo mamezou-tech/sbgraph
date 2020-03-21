@@ -1,4 +1,4 @@
-package pkg
+package types
 
 // Project represents a Scrapbox project
 type Project struct {

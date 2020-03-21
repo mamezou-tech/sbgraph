@@ -10,7 +10,7 @@ import (
 
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
 
-	"github.com/kondoumh/scrapbox-viz/pkg"
+	"github.com/kondoumh/scrapbox-viz/pkg/types"
 	"github.com/kondoumh/scrapbox-viz/pkg/fetch"
 	"github.com/spf13/cobra"
 )
@@ -61,10 +61,10 @@ func doFetch(cmd *cobra.Command) {
 	fmt.Printf("took %s\n", elapsed)
 }
 
-func fetchIndex(projectName string) (pkg.Project, error) {
+func fetchIndex(projectName string) (types.Project, error) {
 	url := fmt.Sprintf("%s/%s?limit=1", fetch.BaseURL, projectName)
 	data, err := fetch.FetchData(url)
-	var project pkg.Project
+	var project types.Project
 	if err != nil {
 		return project, err
 	}
@@ -75,15 +75,15 @@ func fetchIndex(projectName string) (pkg.Project, error) {
 	return project, nil
 }
 
-func fetchPageList(project pkg.Project) error {
-	pages := []pkg.Page{}
+func fetchPageList(project types.Project) error {
+	pages := []types.Page{}
 	for skip := 0; skip < project.Count; skip += fetch.Limit {
 		url := fmt.Sprintf("%s/%s?skip=%d&limit=%d&sort=updated", fetch.BaseURL, project.Name, skip, fetch.Limit)
 		data, err := fetch.FetchData(url)
 		if err != nil {
 			return err
 		}
-		var proj pkg.Project
+		var proj types.Project
 		err = json.Unmarshal(data, &proj)
 		for _, page := range proj.Pages {
 			pages = append(pages, page)
@@ -97,8 +97,8 @@ func fetchPageList(project pkg.Project) error {
 	return nil
 }
 
-func dividePagesList(multiplicity int, projectName string) ([][]pkg.Page, error) {
-	var divided [][]pkg.Page
+func dividePagesList(multiplicity int, projectName string) ([][]types.Page, error) {
+	var divided [][]types.Page
 	proj, err := readProject(projectName)
 	if err != nil {
 		return divided, err
@@ -122,9 +122,9 @@ func dividePagesList(multiplicity int, projectName string) ([][]pkg.Page, error)
 	return divided, nil
 }
 
-func readProject(projectName string) (pkg.Project, error) {
+func readProject(projectName string) (types.Project, error) {
 	bytes, err := file.ReadBytes(projectName+".json", config.WorkDir)
-	var project pkg.Project
+	var project types.Project
 	if err != nil {
 		return project, err
 	}
@@ -134,7 +134,7 @@ func readProject(projectName string) (pkg.Project, error) {
 	return project, err
 }
 
-func fetchPagesByGroup(projectName string, pages []pkg.Page, wg *sync.WaitGroup) error {
+func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGroup) error {
 	defer wg.Done()
 	for _, page := range pages {
 		fmt.Println(page.Title)
