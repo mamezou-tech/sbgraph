@@ -1,9 +1,10 @@
 package file
 
 import (
-	"os"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
+	"io/ioutil"
+	"os"
 )
 
 func CreateDir(path string) error {
@@ -29,4 +30,12 @@ func WriteBytes(data []byte, fileName string, outDir string) error {
 	json.Indent(&pj, []byte(data), "", " ")
 	file.Write(pj.Bytes())
 	return nil
+}
+
+func ReadBytes(fileName string, outDir string) ([]byte, error) {
+	raw, err := ioutil.ReadFile(outDir + "/" + fileName)
+	if err != nil {
+		return nil, err
+	}
+	return raw, err
 }
