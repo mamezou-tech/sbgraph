@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mzohreva/GoGraphviz/graphviz"
 	"github.com/kondoumh/scrapbox-viz/pkg/types"
+	"github.com/mzohreva/GoGraphviz/graphviz"
 	"github.com/spf13/cobra"
 )
 
@@ -81,7 +81,7 @@ func buildGraph(cmd *cobra.Command) {
 				continue
 			}
 			var username string
-			if (anonymize) {
+			if anonymize {
 				username = u.ID[5:10]
 			} else {
 				username = u.DisplayName
