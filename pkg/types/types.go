@@ -48,3 +48,14 @@ func (project *Project) ReadFrom(projectName string, workDir string) error {
 	}
 	return nil
 }
+
+func (page *Page) ReadFrom(projectName string, id string, workDir string) error {
+	bytes, err := file.ReadBytes(id+".json", workDir+"/"+projectName)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(bytes, &page); err != nil {
+		return err
+	}
+	return nil
+}
