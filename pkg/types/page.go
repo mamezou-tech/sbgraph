@@ -24,9 +24,10 @@ type Page struct {
 
 // User represents a Scrapbox user
 type User struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	DisplayName string `json:"displayName"`
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	DisplayName  string `json:"displayName"`
+	PagesCreated []string
 }
 
 // ReadFrom will deserialize Project from file
