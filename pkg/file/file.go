@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// CreateDir will create directory according to path argument
 func CreateDir(path string) error {
 	if f, err := os.Stat(path); os.IsNotExist(err) || !f.IsDir() {
 		if err := os.MkdirAll(path, 0775); err != nil {
@@ -16,6 +17,7 @@ func CreateDir(path string) error {
 	return nil
 }
 
+// WriteBytes will write bytes to file
 func WriteBytes(data []byte, fileName string, outDir string) error {
 	dir, err := os.Stat(outDir)
 	if os.IsNotExist(err) || !dir.IsDir() {
@@ -32,6 +34,7 @@ func WriteBytes(data []byte, fileName string, outDir string) error {
 	return nil
 }
 
+// ReadBytes will read bytes from file
 func ReadBytes(fileName string, outDir string) ([]byte, error) {
 	raw, err := ioutil.ReadFile(outDir + "/" + fileName)
 	if err != nil {

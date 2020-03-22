@@ -56,12 +56,13 @@ func doAggregate(cmd *cobra.Command) {
 			p.LinksCreatedPages += page.Linked
 			contrib[page.Author.ID] = p
 		} else {
-			var c contribute
-			c.UserID = page.Author.ID
-			c.UserName = page.Author.DisplayName
-			c.PagesContributed = 1
-			c.ViewsCreatedPages = page.Views
-			c.LinksCreatedPages = page.Linked
+			c := contribute{
+				UserID: page.Author.ID,
+				UserName: page.Author.DisplayName,
+				PagesContributed: 1,
+				ViewsCreatedPages: page.Views,
+				LinksCreatedPages: page.Linked,
+			}
 			contrib[page.Author.ID] = c
 		}
 		for _, user := range page.Collaborators {
@@ -70,10 +71,11 @@ func doAggregate(cmd *cobra.Command) {
 				p.PagesContributed++
 				contrib[user.ID] = p
 			} else {
-				var c contribute
-				c.UserID = user.ID
-				c.UserName = user.DisplayName
-				c.PagesContributed = 1
+				c := contribute {
+					UserID: user.ID,
+					UserName: user.DisplayName,
+					PagesContributed: 1,
+				}
 				contrib[user.ID] = c
 			}
 		}
