@@ -16,3 +16,6 @@
 
 # Working dir on development
 _work
+
+# Others
+.DS_Store
