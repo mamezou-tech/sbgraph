@@ -1,4 +1,4 @@
-package fetch
+package api
 
 import (
 	"io/ioutil"
@@ -8,8 +8,8 @@ import (
 	"os"
 )
 
-// FetchData is helper function for fetch data via API
-func FetchData(rawurl string) ([]byte, error) {
+// Fetch is helper function for fetch data via API
+func Fetch(rawurl string) ([]byte, error) {
 	var res *http.Response
 	var err error
 	if name := os.Getenv("COOKIE_NAME"); name == "" {

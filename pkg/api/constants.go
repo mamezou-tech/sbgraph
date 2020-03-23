@@ -1,4 +1,4 @@
-package fetch
+package api
 
 // BaseURL is base url of Scrapbox API
 const BaseURL string = "https://scrapbox.io/api/pages"

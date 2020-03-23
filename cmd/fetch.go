@@ -11,7 +11,7 @@ import (
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
 
 	"github.com/kondoumh/scrapbox-viz/pkg/types"
-	"github.com/kondoumh/scrapbox-viz/pkg/fetch"
+	"github.com/kondoumh/scrapbox-viz/pkg/api"
 	"github.com/spf13/cobra"
 )
 
@@ -62,8 +62,8 @@ func doFetch(cmd *cobra.Command) {
 }
 
 func fetchIndex(projectName string) (types.Project, error) {
-	url := fmt.Sprintf("%s/%s?limit=1", fetch.BaseURL, projectName)
-	data, err := fetch.FetchData(url)
+	url := fmt.Sprintf("%s/%s?limit=1", api.BaseURL, projectName)
+	data, err := api.Fetch(url)
 	var project types.Project
 	if err != nil {
 		return project, err
@@ -77,9 +77,9 @@ func fetchIndex(projectName string) (types.Project, error) {
 
 func fetchPageList(project types.Project) error {
 	pages := []types.Page{}
-	for skip := 0; skip < project.Count; skip += fetch.Limit {
-		url := fmt.Sprintf("%s/%s?skip=%d&limit=%d&sort=updated", fetch.BaseURL, project.Name, skip, fetch.Limit)
-		data, err := fetch.FetchData(url)
+	for skip := 0; skip < project.Count; skip += api.Limit {
+		url := fmt.Sprintf("%s/%s?skip=%d&limit=%d&sort=updated", api.BaseURL, project.Name, skip, api.Limit)
+		data, err := api.Fetch(url)
 		if err != nil {
 			return err
 		}
@@ -135,8 +135,8 @@ func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGrou
 }
 
 func fetchPage(projectName string, title string, index string) error {
-	url := fmt.Sprintf("%s/%s/%s", fetch.BaseURL, projectName, url.PathEscape(title))
-	data, err := fetch.FetchData(url)
+	url := fmt.Sprintf("%s/%s/%s", api.BaseURL, projectName, url.PathEscape(title))
+	data, err := api.Fetch(url)
 	if err != nil {
 		return err
 	}
