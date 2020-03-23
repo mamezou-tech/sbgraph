@@ -6,6 +6,7 @@ import (
 
 	"github.com/kondoumh/scrapbox-viz/pkg/types"
 	"github.com/spf13/cobra"
+	"github.com/cheggaaa/pb/v3"
 )
 
 // aggregateCmd represents the aggregate command
@@ -42,6 +43,7 @@ func doAggregate(cmd *cobra.Command) {
 		os.Exit(1)
 	}
 	contrib := map[string]contribute{}
+	bar := pb.StartNew(proj.Count)
 	for _, idx := range proj.Pages {
 		var page types.Page
 		err := page.ReadFrom(projectName, idx.ID, config.WorkDir)
@@ -79,7 +81,9 @@ func doAggregate(cmd *cobra.Command) {
 				contrib[user.ID] = c
 			}
 		}
+		bar.Increment()
 	}
+	bar.Finish()
 	err = writeContrib(projectName, contrib)
 	if err != nil {
 		fmt.Println(err)
