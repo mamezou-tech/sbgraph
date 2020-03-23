@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/fetch"
+	"github.com/kondoumh/scrapbox-viz/pkg/api"
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
 	"github.com/spf13/cobra"
 )
@@ -38,8 +38,7 @@ func doInit(cmd *cobra.Command) {
 }
 
 func fetchProject(project string) error {
-	url := fmt.Sprintf("%s/%s?limit=1", fetch.BaseURL, project)
-	data, err := fetch.FetchData(url)
+	data, err := api.FetchIndex(project)
 	if err != nil {
 		return err
 	}
