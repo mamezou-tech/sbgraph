@@ -3,7 +3,6 @@ package cmd
 import (
 	"time"
 	"sync"
-	"net/url"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -62,8 +61,7 @@ func doFetch(cmd *cobra.Command) {
 }
 
 func fetchIndex(projectName string) (types.Project, error) {
-	url := fmt.Sprintf("%s/%s?limit=1", api.BaseURL, projectName)
-	data, err := api.Fetch(url)
+	data, err := api.Fetch(api.ProjectIndexURL(projectName))
 	var project types.Project
 	if err != nil {
 		return project, err
@@ -78,8 +76,7 @@ func fetchIndex(projectName string) (types.Project, error) {
 func fetchPageList(project types.Project) error {
 	pages := []types.Page{}
 	for skip := 0; skip < project.Count; skip += api.Limit {
-		url := fmt.Sprintf("%s/%s?skip=%d&limit=%d&sort=updated", api.BaseURL, project.Name, skip, api.Limit)
-		data, err := api.Fetch(url)
+		data, err := api.Fetch(api.PageListURL(project.Name, skip))
 		if err != nil {
 			return err
 		}
@@ -135,8 +132,7 @@ func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGrou
 }
 
 func fetchPage(projectName string, title string, index string) error {
-	url := fmt.Sprintf("%s/%s/%s", api.BaseURL, projectName, url.PathEscape(title))
-	data, err := api.Fetch(url)
+	data, err := api.Fetch(api.PageURL(projectName, title))
 	if err != nil {
 		return err
 	}

@@ -1,12 +1,18 @@
 package api
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"os"
 )
+
+// Limit is page count to fetch page index
+const Limit int = 100
+
+const baseURL string = "https://scrapbox.io/api/pages"
 
 // Fetch is helper function for fetch data via API
 func Fetch(rawurl string) ([]byte, error) {
@@ -35,4 +41,19 @@ func Fetch(rawurl string) ([]byte, error) {
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	return body, err
+}
+
+func PageListURL(projectName string, skip int) string {
+	url := fmt.Sprintf("%s/%s?skip=%d&limit=%d&sort=updated", baseURL, projectName, skip, Limit)
+	return url
+}
+
+func PageURL(projectName string, title string) string {
+	url := fmt.Sprintf("%s/%s/%s", baseURL, projectName, url.PathEscape(title))
+	return url
+}
+
+func ProjectIndexURL(projectName string) string {
+	url := fmt.Sprintf("%s/%s?limit=1", baseURL, projectName)
+	return url
 }
