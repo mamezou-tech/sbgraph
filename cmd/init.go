@@ -38,8 +38,7 @@ func doInit(cmd *cobra.Command) {
 }
 
 func fetchProject(project string) error {
-	url := fmt.Sprintf(api.ProjectIndexURL(project))
-	data, err := api.Fetch(url)
+	data, err := api.FetchIndex(project)
 	if err != nil {
 		return err
 	}
