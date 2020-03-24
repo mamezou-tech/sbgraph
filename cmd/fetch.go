@@ -14,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fetchCmd represents the fetch command
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "fetch all pages of the project",
@@ -61,7 +60,8 @@ func doFetch(cmd *cobra.Command) {
 }
 
 func fetchIndex(projectName string) (types.Project, error) {
-	data, err := api.FetchIndex(projectName)
+	fetchAPI := api.NewFetchAPI()
+	data, err := fetchAPI.FetchIndex(projectName)
 	var project types.Project
 	if err != nil {
 		return project, err
@@ -75,8 +75,9 @@ func fetchIndex(projectName string) (types.Project, error) {
 
 func fetchPageList(project types.Project) error {
 	pages := []types.Page{}
+	fetchAPI := api.NewFetchAPI()
 	for skip := 0; skip < project.Count; skip += api.Limit {
-		data, err := api.FetchPageList(project.Name, skip)
+		data, err := fetchAPI.FetchPageList(project.Name, skip)
 		if err != nil {
 			return err
 		}
@@ -132,7 +133,8 @@ func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGrou
 }
 
 func fetchPage(projectName string, title string, index string) error {
-	data, err := api.FetchPage(projectName, title)
+	fetchAPI := api.NewFetchAPI()
+	data, err := fetchAPI.FetchPage(projectName, title)
 	if err != nil {
 		return err
 	}

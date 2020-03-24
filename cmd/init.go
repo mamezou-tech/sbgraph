@@ -38,7 +38,8 @@ func doInit(cmd *cobra.Command) {
 }
 
 func fetchProject(project string) error {
-	data, err := api.FetchIndex(project)
+	fetchAPI := api.NewFetchAPI()
+	data, err := fetchAPI.FetchIndex(project)
 	if err != nil {
 		return err
 	}
