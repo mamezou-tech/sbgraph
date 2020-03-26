@@ -1,16 +1,15 @@
 package cmd
 
 import (
-	"time"
-	"sync"
 	"encoding/json"
 	"fmt"
-	"os"
+	"sync"
+	"time"
 
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/types"
 	"github.com/kondoumh/scrapbox-viz/pkg/api"
+	"github.com/kondoumh/scrapbox-viz/pkg/types"
 	"github.com/spf13/cobra"
 )
 
@@ -31,21 +30,12 @@ func init() {
 func doFetch(cmd *cobra.Command) {
 	projectName, _ := cmd.PersistentFlags().GetString("project")
 	project, err := fetchIndex(projectName)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 	fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
 	err = fetchPageList(project)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 	groups, err := dividePagesList(3, projectName)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 	path := fmt.Sprintf("%s/%s", config.WorkDir, projectName)
 	file.CreateDir(path)
 	var wg sync.WaitGroup
