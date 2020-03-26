@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/kondoumh/scrapbox-viz/pkg/api"
 	"github.com/kondoumh/scrapbox-viz/pkg/file"
@@ -27,14 +26,10 @@ func init() {
 func doInit(cmd *cobra.Command) {
 	project, _ := cmd.PersistentFlags().GetString("project")
 	fmt.Println("init called, project : ", project)
-	if err := file.CreateDir(config.WorkDir); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if err := fetchProject(project); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	err := file.CreateDir(config.WorkDir)
+	CheckErr(err)
+	err = fetchProject(project)
+	CheckErr(err)
 }
 
 func fetchProject(project string) error {

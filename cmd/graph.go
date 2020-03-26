@@ -36,10 +36,8 @@ func buildGraph(cmd *cobra.Command) {
 	fmt.Printf("Build graph project : %s, threshold : %d, include user: %t, anonymize : %t\n", projectName, threshold, includeUser, anonymize)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
+
 	users := map[string]types.User{}
 	pages := map[string]types.Page{}
 	for _, idx := range proj.Pages {
@@ -48,10 +46,7 @@ func buildGraph(cmd *cobra.Command) {
 		}
 		var page types.Page
 		err := page.ReadFrom(projectName, idx.ID, config.WorkDir)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		CheckErr(err)
 		pages[page.ID] = page
 		u, contains := users[page.Author.ID]
 		if contains {
@@ -112,10 +107,7 @@ func buildGraph(cmd *cobra.Command) {
 		}
 	}
 	err = writeDot(graph, projectName, config.WorkDir)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 }
 
 func createGraph() graphviz.Graph {

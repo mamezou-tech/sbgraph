@@ -38,19 +38,13 @@ func doAggregate(cmd *cobra.Command) {
 	fmt.Printf("Aggregate project : %s\n", projectName)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 	contrib := map[string]contribute{}
 	bar := pb.StartNew(proj.Count)
 	for _, idx := range proj.Pages {
 		var page types.Page
 		err := page.ReadFrom(projectName, idx.ID, config.WorkDir)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		CheckErr(err)
 		p, contains := contrib[page.Author.ID]
 		if contains {
 			p.PagesCreated++
@@ -85,10 +79,7 @@ func doAggregate(cmd *cobra.Command) {
 	}
 	bar.Finish()
 	err = writeContrib(projectName, contrib)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	CheckErr(err)
 }
 
 func writeContrib(projectName string, contrib map[string]contribute) error {
