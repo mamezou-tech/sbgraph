@@ -52,6 +52,9 @@ func fetch(rawurl string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("Error: http status %s", res.Status)
+	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	return body, err
