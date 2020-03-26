@@ -12,7 +12,10 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "initialize directory",
-	Long:  `initalize directory for Scrapbox project`,
+	Long:  LongUsage(`
+		initalize directory for Scrapbox project
+		sbf init -p <project name>
+		`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doInit(cmd)
 	},
