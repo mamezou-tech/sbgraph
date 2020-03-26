@@ -12,15 +12,21 @@ import (
 // graphCmd represents the graph command
 var graphCmd = &cobra.Command{
 	Use:   "graph",
-	Short: "generate graph structure",
-	Long:  `generate graph structure of pages and authors (as dot file)`,
+	Short: "Generate graph structure of the project",
+	Long:  LongUsage(`
+		Generate graph structure of pages and authors.
+
+		  sbf graph -p <project name>
+
+		GraphViz dot file will be created at '<WorkDir>/<project name>.dot'.
+	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		buildGraph(cmd)
 	},
 }
 
 func init() {
-	graphCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project (required)")
+	graphCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	graphCmd.PersistentFlags().IntP("threshold", "t", 0, "Threshold value of views to filter page")
 	graphCmd.PersistentFlags().BoolP("include", "i", false, "Include user node")
 	graphCmd.PersistentFlags().BoolP("anonymize", "a", false, "Anonymize user")

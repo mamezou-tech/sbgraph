@@ -6,6 +6,7 @@ import (
 	"github.com/MakeNowJust/heredoc/v2"
 )
 
+// CheckErr will print error message to stderr and exit with code 1
 func CheckErr(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
@@ -13,6 +14,7 @@ func CheckErr(err error) {
 	}
 }
 
+// LongUsage is helper for print long usage
 func LongUsage(s string) string {
 	if len(s) == 0 {
 		return s

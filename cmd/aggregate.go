@@ -12,15 +12,21 @@ import (
 // aggregateCmd represents the aggregate command
 var aggregateCmd = &cobra.Command{
 	Use:   "aggregate",
-	Short: "aggregate project activities",
-	Long:  `aggregate project activities`,
+	Short: "Aggregate project activities",
+	Long:  LongUsage(`
+	Aggregate project activities.
+
+	  sbf aggregate -p <project name>
+
+	CSV will be created at '<WorkDir>/<project name>.csv'.
+	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doAggregate(cmd)
 	},
 }
 
 func init() {
-	aggregateCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project (required)")
+	aggregateCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	rootCmd.AddCommand(aggregateCmd)
 }
 

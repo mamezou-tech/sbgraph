@@ -11,8 +11,14 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "initialize directory",
-	Long:  `initalize directory for Scrapbox project`,
+	Short: "Initialize working directory",
+	Long:  LongUsage(`
+		Initalize working directory for Scrapbox project.
+
+		  sbv init -p <project name>
+		
+		if 'workdir' exists in $HOME/.sbv.yaml or set by -d(--workdir) flag, it will be created.
+		`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doInit(cmd)
 	},
