@@ -14,6 +14,7 @@ var initCmd = &cobra.Command{
 	Short: "initialize directory",
 	Long:  LongUsage(`
 		initalize directory for Scrapbox project
+
 		sbf init -p <project name>
 		`),
 	Run: func(cmd *cobra.Command, args []string) {

@@ -13,7 +13,11 @@ import (
 var aggregateCmd = &cobra.Command{
 	Use:   "aggregate",
 	Short: "aggregate project activities",
-	Long:  `aggregate project activities`,
+	Long:  LongUsage(`
+	aggregate project activities
+
+	sbf aggregate -p <project name>
+	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doAggregate(cmd)
 	},

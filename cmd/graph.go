@@ -13,7 +13,11 @@ import (
 var graphCmd = &cobra.Command{
 	Use:   "graph",
 	Short: "generate graph structure",
-	Long:  `generate graph structure of pages and authors (as dot file)`,
+	Long:  LongUsage(`
+	generate graph structure of pages and authors (as dot file)
+
+	sbf graph -p <project name>
+	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		buildGraph(cmd)
 	},

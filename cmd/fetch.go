@@ -16,7 +16,11 @@ import (
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "fetch all pages of the project",
-	Long:  `fetch all pages of the project`,
+	Long:  LongUsage(`
+	fetch all pages of the project
+
+	sbf fetch -p <project name>
+	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doFetch(cmd)
 	},
