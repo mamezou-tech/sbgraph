@@ -13,7 +13,7 @@ import (
 var graphCmd = &cobra.Command{
 	Use:   "graph",
 	Short: "Generate graph structure of the project",
-	Long:  LongUsage(`
+	Long: LongUsage(`
 		Generate graph structure of pages and authors.
 
 		  sbf graph -p <project name>

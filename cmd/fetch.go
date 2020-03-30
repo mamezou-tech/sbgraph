@@ -16,7 +16,7 @@ import (
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "Fetch all pages of the project",
-	Long:  LongUsage(`
+	Long: LongUsage(`
 		Fetch all page data of the project.
 
 		  sbv fetch -p <project name>
