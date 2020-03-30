@@ -23,10 +23,10 @@ var rootCmd = &cobra.Command{
 	Use:   "sbv",
 	Short: "A CLI to analize Scrapbox project.",
 	Long:  LongUsage(`
-		scrapbox-vix (sbv) is a CLI to fetch data and visualize Scrapbox projects.
-		  fetch page data (JSON format)
-		  aggregate user activities (pages created, views of created page, etc.)
-		  generate graph data (GraphViz dot file)
+		scrapbox-viz (sbv) is a CLI to fetch data and visualize Scrapbox projects.
+		  Fetch page data (JSON format)
+		  Aggregate user activities (pages created, views of created page, etc.)
+		  Generate graph data (as GraphViz dot file)
 	`),
 }
 

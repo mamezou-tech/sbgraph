@@ -15,11 +15,15 @@ import (
 
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
-	Short: "fetch all pages of the project",
+	Short: "Fetch all pages of the project",
 	Long:  LongUsage(`
-	fetch all pages of the project
+		Fetch all page data of the project.
 
-	sbf fetch -p <project name>
+		  sbv fetch -p <project name>
+
+		Page list data will be saved as JSON file at '<WorkDir>/<project name>.json'.
+		Each Page data will be saved as JSON file in '<WorkDir>/<project name>'.
+		The file name consists of the page ID.
 	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doFetch(cmd)
@@ -27,7 +31,7 @@ var fetchCmd = &cobra.Command{
 }
 
 func init() {
-	fetchCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project (required)")
+	fetchCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	rootCmd.AddCommand(fetchCmd)
 }
 
