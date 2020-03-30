@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 		scrapbox-viz (sbv) is a CLI to fetch data and visualize Scrapbox projects.
 		  Fetch page data (JSON format)
 		  Aggregate user activities (pages created, views of created page, etc.)
-		  Generate graph data (as GraphViz dot file)
+		  Generate graph data (as Graphviz dot file)
 	`),
 }
 

@@ -18,7 +18,7 @@ var graphCmd = &cobra.Command{
 
 		  sbf graph -p <project name>
 
-		GraphViz dot file will be created at '<WorkDir>/<project name>.dot'.
+		Graphviz dot file will be created at '<WorkDir>/<project name>.dot'.
 	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		buildGraph(cmd)
