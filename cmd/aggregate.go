@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/cheggaaa/pb/v3"
 	"github.com/kondoumh/scrapbox-viz/pkg/types"
 	"github.com/spf13/cobra"
-	"github.com/cheggaaa/pb/v3"
 )
 
 // aggregateCmd represents the aggregate command
 var aggregateCmd = &cobra.Command{
 	Use:   "aggregate",
 	Short: "Aggregate project activities",
-	Long:  LongUsage(`
+	Long: LongUsage(`
 	Aggregate project activities.
 
 	  sbf aggregate -p <project name>
@@ -59,9 +59,9 @@ func doAggregate(cmd *cobra.Command) {
 			contrib[page.Author.ID] = p
 		} else {
 			c := contribute{
-				UserID: page.Author.ID,
-				UserName: page.Author.DisplayName,
-				PagesContributed: 1,
+				UserID:            page.Author.ID,
+				UserName:          page.Author.DisplayName,
+				PagesContributed:  1,
 				ViewsCreatedPages: page.Views,
 				LinksCreatedPages: page.Linked,
 			}
@@ -73,9 +73,9 @@ func doAggregate(cmd *cobra.Command) {
 				p.PagesContributed++
 				contrib[user.ID] = p
 			} else {
-				c := contribute {
-					UserID: user.ID,
-					UserName: user.DisplayName,
+				c := contribute{
+					UserID:           user.ID,
+					UserName:         user.DisplayName,
 					PagesContributed: 1,
 				}
 				contrib[user.ID] = c
