@@ -51,11 +51,6 @@ CSV will be created at `<WorkDir>/<project name>.csv`.
 ## Generate graph of the pages and users
 Parse page data and generate graph of pages and users.
 
--  -a, --anonymize        Anonymize user
--  -i, --include          Include user node
--  -p, --project string   Name of Scrapbox project (default "help-jp")
--  -t, --threshold int    Threshold value of views to filter page
-
 ```
 $ sbf graph -p <project name>
 ```
