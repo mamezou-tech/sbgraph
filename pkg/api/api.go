@@ -35,14 +35,14 @@ func FetchIndex(projectName string) ([]byte, error) {
 func fetch(rawurl string) ([]byte, error) {
 	var res *http.Response
 	var err error
-	if name := os.Getenv("COOKIE_NAME"); name == "" {
+	if name := os.Getenv("SB_COOKIE_ID"); name != "connect.sid" {
 		res, err = http.Get(rawurl)
 	} else {
 		jar, _ := cookiejar.New(nil)
 		var cookies []*http.Cookie
 		cookie := &http.Cookie{
-			Name:   os.Getenv("COOKIE_NAME"),
-			Value:  os.Getenv("COOKIE_VALUE"),
+			Name:   os.Getenv("SB_COOKIE_ID"),
+			Value:  os.Getenv("SB_COOKIE_VALUE"),
 			Path:   "/",
 			Domain: "scrapbox.io",
 		}
