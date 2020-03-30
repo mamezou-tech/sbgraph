@@ -1,15 +1,15 @@
 # scrapbox-viz
 
-scrapbox-viz (sbv) is a CLI to fetch data and visualize Scrapbox projects.
+scrapbox-viz (sbv) is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project visualize the.
 
 - Fetch page data (JSON format)
 - Aggregate user activities (pages created, views of created page, etc.)
-- Generate graph data (as GraphViz dot file)
+- Generate graph data (as Graphviz dot file)
 
 ## Initialize working directory
 Data fetched via Scrapbox APIs will be stored in an existing working directory.
 
-If you create `.sbv.yaml` at `${HOME}` and write path in th entry `workdir`, it will be set to that path.
+If you create `.sbv.yaml` at `${HOME}` and write path in entry `workdir`, working directory will be set to that path.
 
 ```yaml
 workdir: path/to/workdir
@@ -32,6 +32,13 @@ Fetch page data of the Scrapbox project via [Scrapbox APIs](https://scrapbox.io/
 
 ```
 $ sbf fetch -p <project name>
+```
+
+To fetch from a private project, you needs to set the cookie to environment variables.
+
+```bash
+$ export SB_COOKIE_ID=connect.sid
+$ export SB_COOKIE_VALUE=your-fancy-cookie
 ```
 
 ## Aggregate user activites in the project
@@ -73,4 +80,4 @@ You can reduce number of nodes in the graph by specifying page views as threshol
 $ sbf graph -p <project name> -t 100
 ```
 
-GraphViz dot file will be created at `<WorkDir>/<project name>.dot`.
+Graphviz dot file will be created at `<WorkDir>/<project name>.dot`.
