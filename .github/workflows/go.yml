@@ -28,9 +28,9 @@ jobs:
 
     - name: Archive
       run: |
-        tar cfvz sbf-linux-amd64.tar.gz build/linux/sbf
-        tar cfvz sbf-windows-amd64.tar.gz build/windows/sbf.exe
-        tar cfvz sbf-darwin-amd64.tar.gz build/macos/sbf
+        tar cfvz build/sbf-linux-amd64.tar.gz build/linux/sbf
+        tar cfvz build/sbf-windows-amd64.tar.gz build/windows/sbf.exe
+        tar cfvz build/sbf-darwin-amd64.tar.gz build/macos/sbf
         ls -lh build/
 
     - name: Publish for Linux
