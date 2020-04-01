@@ -25,17 +25,16 @@ jobs:
 
     - name: Build
       run: |
-        GOOS=linux GOARCH=amd64 go build -o build/linux/sbf main.go
-        GOOS=windows GOARCH=amd64 go build -o build/windows/sbf.exe main.go
-        GOOS=darwin GOARCH=amd64 go build -o build/macos/sbf main.go
+        GOOS=linux GOARCH=amd64 go build -o build/linux/sbgraph main.go
+        GOOS=windows GOARCH=amd64 go build -o build/windows/sbgraph.exe main.go
+        GOOS=darwin GOARCH=amd64 go build -o build/macos/sbgraph main.go
 
     - name: Archive
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        tar cfvz build/sbf-linux-amd64.tar.gz build/linux/sbf
-        tar cfvz build/sbf-windows-amd64.tar.gz build/windows/sbf.exe
-        tar cfvz build/sbf-darwin-amd64.tar.gz build/macos/sbf
-        ls -lh build/
+        (cd build/linux && tar cfvz ../sbgraph-linux-amd64.tar.gz sbgraph)
+        (cd build/windows && tar cfvz ../sbf-windows-amd64.tar.gz sbgraph.exe)
+        (cd build/macos && tar cfvz ../sbf-darwin-amd64.tar.gz sbgraph)
 
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
