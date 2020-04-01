@@ -25,6 +25,14 @@ jobs:
         GOOS=linux GOARCH=amd64 go build -o build/linux/sbf main.go
         GOOS=windows GOARCH=amd64 go build -o build/windows/sbf.exe main.go
         GOOS=darwin GOARCH=amd64 go build -o build/macos/sbf main.go
+
+    - name: Archive
+      run: |
+        tar cfvz sbf-linux-amd64.tar.gz build/linux/sbf
+        tar cfvz sbf-windows-amd64.tar.gz build/windows/sbf.exe
+        tar cfvz sbf-darwin-amd64.tar.gz build/macos/sbf
+        ls -lh build/
+
     - name: Publish for Linux
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
