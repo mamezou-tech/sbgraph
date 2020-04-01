@@ -1,5 +1,7 @@
 # scrapbox-viz
 
+![Go](https://github.com/kondoumh/scrapbox-viz/workflows/Go/badge.svg)
+
 scrapbox-viz (sbv) is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project.
 
 - Fetch page data (JSON format)
