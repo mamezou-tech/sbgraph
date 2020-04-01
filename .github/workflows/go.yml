@@ -27,30 +27,17 @@ jobs:
         GOOS=darwin GOARCH=amd64 go build -o build/macos/sbf main.go
 
     - name: Archive
+      if: startsWith(github.ref, 'refs/tags/')
       run: |
         tar cfvz build/sbf-linux-amd64.tar.gz build/linux/sbf
         tar cfvz build/sbf-windows-amd64.tar.gz build/windows/sbf.exe
         tar cfvz build/sbf-darwin-amd64.tar.gz build/macos/sbf
         ls -lh build/
 
-    - name: Publish for Linux
+    - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: build/linux/sbf
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-    - name: Publish for Windows
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/windows/sbf.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-    - name: Publish for macOS
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/macos/sbf
+        files: build/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
