@@ -2,6 +2,9 @@ name: Go
 
 on:
   push:
+    paths-ignore:
+      - README.md
+      - LICENSE
 
 jobs:
 

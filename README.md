@@ -1,6 +1,6 @@
 # scrapbox-viz
 
-scrapbox-viz (sbv) is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project visualize the.
+scrapbox-viz (sbv) is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project.
 
 - Fetch page data (JSON format)
 - Aggregate user activities (pages created, views of created page, etc.)
