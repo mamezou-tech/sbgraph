@@ -19,7 +19,7 @@ var fetchCmd = &cobra.Command{
 	Long: LongUsage(`
 		Fetch all page data of the project.
 
-		  sbv fetch -p <project name>
+		  sbgraph fetch -p <project name>
 
 		Page list data will be saved as JSON file at '<WorkDir>/<project name>.json'.
 		Each Page data will be saved as JSON file in '<WorkDir>/<project name>'.

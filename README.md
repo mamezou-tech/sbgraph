@@ -30,7 +30,7 @@ sbgraph init
 
 Data fetched via Scrapbox APIs will be stored in an existing working directory.
 
-If you create `.sbv.yaml` at `${HOME}` and write path in entry `workdir`, working directory will be set to that path.
+If you create `.sbgraph.yaml` at `${HOME}` and write path in entry `workdir`, working directory will be set to that path.
 
 ```yaml
 workdir: path/to/workdir
