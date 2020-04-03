@@ -14,9 +14,9 @@ var initCmd = &cobra.Command{
 	Long: LongUsage(`
 		Initalize working directory for Scrapbox project.
 
-		  sbv init
+		  sbgraph init
 		
-		if 'workdir' exists in $HOME/.sbv.yaml or set by global -d(--workdir) flag, it will be created.
+		if 'workdir' exists in $HOME/.sbgraph.yaml or set by global -d(--workdir) flag, it will be created.
 		`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doInit(cmd)

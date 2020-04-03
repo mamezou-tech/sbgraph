@@ -20,10 +20,10 @@ var config Config
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "sbv",
+	Use:   "sbgraph",
 	Short: "A CLI to analize Scrapbox project.",
 	Long:  LongUsage(`
-		scrapbox-viz (sbv) is a CLI to fetch data and visualize Scrapbox projects.
+		sbgraph is a CLI to fetch data and visualize Scrapbox projects.
 		  Fetch page data (JSON format)
 		  Aggregate user activities (pages created, views of created page, etc.)
 		  Generate graph data (as Graphviz dot file)
@@ -39,7 +39,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sbv.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sbgraph.yaml)")
 	rootCmd.PersistentFlags().StringP("workdir", "d", "_work", "working directory")
 	viper.BindPFlag("workdir", rootCmd.PersistentFlags().Lookup("workdir"))
 }
@@ -53,7 +53,7 @@ func initConfig() {
 		CheckErr(err)
 
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".sbv")
+		viper.SetConfigName(".sbgraph")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
