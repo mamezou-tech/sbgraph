@@ -79,6 +79,9 @@ func fetchPageList(project types.Project) error {
 		}
 		var proj types.Project
 		err = json.Unmarshal(data, &proj)
+		if err != nil {
+			return err
+		}
 		for _, page := range proj.Pages {
 			pages = append(pages, page)
 		}
