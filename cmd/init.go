@@ -12,7 +12,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize working directory",
 	Long: LongUsage(`
-		Initalize working directory for Scrapbox project.
+		Initialize working directory for Scrapbox project.
 
 		  sbgraph init
 		

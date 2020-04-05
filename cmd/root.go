@@ -22,7 +22,7 @@ var config Config
 var rootCmd = &cobra.Command{
 	Use:   "sbgraph",
 	Short: "A CLI to analize Scrapbox project.",
-	Long:  LongUsage(`
+	Long: LongUsage(`
 		sbgraph is a CLI to fetch data and visualize Scrapbox projects.
 		  Fetch page data (JSON format)
 		  Aggregate user activities (pages created, views of created page, etc.)

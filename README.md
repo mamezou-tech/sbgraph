@@ -1,6 +1,7 @@
 # sbgraph
 
 ![Go](https://github.com/kondoumh/sbgraph/workflows/Go/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kondoumh/sbgraph)](https://goreportcard.com/report/github.com/kondoumh/sbgraph)
 
 sbgraph is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project.
 
