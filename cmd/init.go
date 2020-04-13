@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/file"
+	"github.com/kondoumh/sbgraph/pkg/file"
 	"github.com/spf13/cobra"
 )
 

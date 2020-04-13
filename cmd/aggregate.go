@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/cheggaaa/pb/v3"
-	"github.com/kondoumh/scrapbox-viz/pkg/types"
+	"github.com/kondoumh/sbgraph/pkg/types"
 	"github.com/spf13/cobra"
 )
 

@@ -3,7 +3,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/file"
+	"github.com/kondoumh/sbgraph/pkg/file"
 )
 
 // Page represents a Scrapbox page

@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/file"
+	"github.com/kondoumh/sbgraph/pkg/file"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/api"
-	"github.com/kondoumh/scrapbox-viz/pkg/types"
+	"github.com/kondoumh/sbgraph/pkg/api"
+	"github.com/kondoumh/sbgraph/pkg/types"
 	"github.com/spf13/cobra"
 )
 

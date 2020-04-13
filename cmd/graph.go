@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kondoumh/scrapbox-viz/pkg/types"
+	"github.com/kondoumh/sbgraph/pkg/types"
 	"github.com/mzohreva/GoGraphviz/graphviz"
 	"github.com/spf13/cobra"
 )
