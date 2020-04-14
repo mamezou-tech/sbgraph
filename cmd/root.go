@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"os"
 	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 
@@ -11,7 +13,8 @@ import (
 
 // Config store settings
 type Config struct {
-	WorkDir string `yaml:"workdir"`
+	WorkDir        string `yaml:"workdir"`
+	CurrentProject string `yaml:current_project`
 }
 
 var cfgFile string
@@ -40,16 +43,20 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sbgraph.yaml)")
-	rootCmd.PersistentFlags().StringP("workdir", "d", "_work", "working directory")
+	wd, err := os.Getwd()
+	CheckErr(err)
+	wkdir := filepath.FromSlash(wd + "/_work")
+	rootCmd.PersistentFlags().StringP("workdir", "d", wkdir, "working directory")
 	viper.BindPFlag("workdir", rootCmd.PersistentFlags().Lookup("workdir"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	home, err := homedir.Dir()
+
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
-		home, err := homedir.Dir()
 		CheckErr(err)
 
 		viper.AddConfigPath(home)
@@ -58,11 +65,18 @@ func initConfig() {
 
 	viper.AutomaticEnv() // read in environment variables that match
 
-	// If a config file is found, read it in.
+	// Read config file in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 		if err := viper.Unmarshal(&config); err == nil {
 			fmt.Printf("config: %#v\n", config)
+		}
+	}
+	confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
+	if err := viper.SafeWriteConfigAs(confPath); err != nil {
+		if os.IsNotExist(err) {
+			err = viper.WriteConfigAs(home)
+			CheckErr(err)
 		}
 	}
 }
