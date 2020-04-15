@@ -16,7 +16,7 @@ var graphCmd = &cobra.Command{
 	Long: LongUsage(`
 		Generate graph structure of pages and authors.
 
-		  sbf graph -p <project name>
+		  sbf graph
 
 		Graphviz dot file will be created at '<WorkDir>/<project name>.dot'.
 	`),
@@ -26,7 +26,6 @@ var graphCmd = &cobra.Command{
 }
 
 func init() {
-	graphCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	graphCmd.PersistentFlags().IntP("threshold", "t", 0, "Threshold value of views to filter page")
 	graphCmd.PersistentFlags().BoolP("include", "i", false, "Include user node")
 	graphCmd.PersistentFlags().BoolP("anonymize", "a", false, "Anonymize user")
@@ -35,7 +34,7 @@ func init() {
 }
 
 func buildGraph(cmd *cobra.Command) {
-	projectName, _ := cmd.PersistentFlags().GetString("project")
+	projectName := config.CurrentProject
 	threshold, _ := cmd.PersistentFlags().GetInt("threshold")
 	includeUser, _ := cmd.PersistentFlags().GetBool("include")
 	anonymize, _ := cmd.PersistentFlags().GetBool("anonymize")

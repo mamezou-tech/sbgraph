@@ -16,7 +16,7 @@ var aggregateCmd = &cobra.Command{
 	Long: LongUsage(`
 	Aggregate project activities.
 
-	  sbf aggregate -p <project name>
+	  sbf aggregate
 
 	CSV will be created at '<WorkDir>/<project name>.csv'.
 	`),
@@ -26,7 +26,6 @@ var aggregateCmd = &cobra.Command{
 }
 
 func init() {
-	aggregateCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	rootCmd.AddCommand(aggregateCmd)
 }
 
@@ -40,7 +39,7 @@ type contribute struct {
 }
 
 func doAggregate(cmd *cobra.Command) {
-	projectName, _ := cmd.PersistentFlags().GetString("project")
+	projectName := config.CurrentProject
 	fmt.Printf("Aggregate project : %s\n", projectName)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)

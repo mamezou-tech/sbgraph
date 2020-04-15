@@ -19,7 +19,7 @@ var fetchCmd = &cobra.Command{
 	Long: LongUsage(`
 		Fetch all page data of the project.
 
-		  sbgraph fetch -p <project name>
+		  sbgraph fetch
 
 		Page list data will be saved as JSON file at '<WorkDir>/<project name>.json'.
 		Each Page data will be saved as JSON file in '<WorkDir>/<project name>'.
@@ -31,12 +31,11 @@ var fetchCmd = &cobra.Command{
 }
 
 func init() {
-	fetchCmd.PersistentFlags().StringP("project", "p", "help-jp", "Name of Scrapbox project")
 	rootCmd.AddCommand(fetchCmd)
 }
 
 func doFetch(cmd *cobra.Command) {
-	projectName, _ := cmd.PersistentFlags().GetString("project")
+	projectName := config.CurrentProject
 	project, err := fetchIndex(projectName)
 	CheckErr(err)
 	fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
