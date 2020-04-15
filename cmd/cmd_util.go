@@ -22,3 +22,10 @@ func LongUsage(s string) string {
 	}
 	return heredoc.Doc(s)
 }
+
+func CheckProject(projectName string) {
+	if projectName == "" {
+		fmt.Fprintln(os.Stderr, "Project name not set. execute `sbgraph project -p <project name>`")
+		os.Exit(1)
+	}
+}
