@@ -14,7 +14,7 @@ import (
 // Config store settings
 type Config struct {
 	WorkDir        string `yaml:"workdir"`
-	CurrentProject string `yaml:current_project`
+	CurrentProject string `yaml:"currentproject"`
 }
 
 var cfgFile string
@@ -47,36 +47,56 @@ func init() {
 	CheckErr(err)
 	wkdir := filepath.FromSlash(wd + "/_work")
 	rootCmd.PersistentFlags().StringP("workdir", "d", wkdir, "working directory")
+	rootCmd.PersistentFlags().StringP("currentproject", "c", "", "current project")
 	viper.BindPFlag("workdir", rootCmd.PersistentFlags().Lookup("workdir"))
+	viper.BindPFlag("currentproject", rootCmd.PersistentFlags().Lookup("currentproject"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	home, err := homedir.Dir()
-
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
+		home, err := homedir.Dir()
 		CheckErr(err)
-
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".sbgraph")
+		confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
+		viper.SetConfigFile(confPath)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// Read config file in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		if err := viper.Unmarshal(&config); err == nil {
-			fmt.Printf("config: %#v\n", config)
-		}
+		fmt.Printf("Using config file: %s\n", viper.ConfigFileUsed())
+		err := viper.Unmarshal(&config)
+		CheckErr(err)
 	}
+	SaveConfigAs()
+}
+
+func SaveConfigAs() {
+	home, err := homedir.Dir()
+	CheckErr(err)
 	confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
 	if err := viper.SafeWriteConfigAs(confPath); err != nil {
 		if os.IsNotExist(err) {
-			err = viper.WriteConfigAs(home)
+			err = viper.WriteConfigAs(confPath)
 			CheckErr(err)
 		}
 	}
+}
+
+func SaveConfig() {
+	home, err := homedir.Dir()
+	CheckErr(err)
+	confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
+	viper.SetConfigFile(confPath)
+	err = viper.WriteConfig()
+	CheckErr(err)
+	if err = viper.ReadInConfig(); err == nil {
+		fmt.Println("reload config file:", viper.ConfigFileUsed())
+		err := viper.Unmarshal(&config)
+		CheckErr(err)
+	}
+	fmt.Printf("config update: %#v\n", config)
 }
