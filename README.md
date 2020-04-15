@@ -9,6 +9,9 @@ sbgraph is a CLI for fetching and visualizing data from [Scrapbox](https://scrap
 - Aggregate user activities (pages created, views of created page, etc.)
 - Generate graph data (as Graphviz dot file)
 
+![20200306204303](https://user-images.githubusercontent.com/2092183/79331841-ca874880-7f56-11ea-9127-c1f249742028.png)
+
+
 ## Installing
 
 ```
@@ -23,27 +26,49 @@ sudo mv sbgraph /usr/local/bin
 
 ## Sub commands
 
-### Initialize working directory
+### Initialize config & working directory
 
 ```
 sbgraph init
 ```
 
+Config file (.sbgraph.yaml) will be created in users home directory.
+
 Data fetched via Scrapbox APIs will be stored in an existing working directory.
 
-If you create `.sbgraph.yaml` at `${HOME}` and write path in entry `workdir`, working directory will be set to that path.
+By default working directory will be set `$(pwd)/_work`
+
+In config file working directory will be set to that path.
 
 ```yaml
 workdir: path/to/workdir
 ```
 
-If the directory does not exist, it will be created.
+If the working directory does not exist, it will be created.
 
 Of cource, you can specify the directory every time you execute sub commands with global -d(--workdir) flag.
 
 ```
-sbgraph fetch -p <project name> -d <path/to/workdir>
+sbgraph fetch -d <path/to/workdir>
 ```
+
+### Set target project
+
+```
+sbgraph project -p <project name>
+```
+
+```yaml
+currentproject: project-name
+```
+
+### Print configuration status
+
+```
+sbgraph status
+```
+
+Config file path and current settings will be printed.
 
 ### Fetch page data of the project
 Fetch page data of the Scrapbox project via [Scrapbox APIs](https://scrapbox.io/help-jp/API).
@@ -53,7 +78,7 @@ Fetch page data of the Scrapbox project via [Scrapbox APIs](https://scrapbox.io/
   - The file name consists of the page ID.
 
 ```
-sbgraph fetch -p <project name>
+sbgraph fetch
 ```
 
 To fetch from a private project, you needs to set the cookie to environment variables.
@@ -72,7 +97,7 @@ Parse page data and aggregate activities of the project per user.
 - Links of created page
 
 ```
-sbgraph aggregate -p <project name>
+sbgraph aggregate
 ```
 
 CSV will be created at `<WorkDir>/<project name>.csv`.
@@ -81,25 +106,33 @@ CSV will be created at `<WorkDir>/<project name>.csv`.
 Parse page data and generate graph of pages and users.
 
 ```
-sbgraph graph -p <project name>
+sbgraph graph
 ```
 
 If you want to include user node to the graph, specify -i(--include) flag.
 
 ```
-sbgraph graph -p <project name> -i=true
+sbgraph graph -i=true
 ```
 
 If you want to annonymize user name of user node, specify -a(--anonymize) flag.
 
 ```
-sbgraph graph -p <project name> -i=true -a=true
+sbgraph graph -i=true -a=true
 ```
 
 You can reduce number of nodes in the graph by specifying page views as threshold value.
 
 ```
-sbgraph graph -p <project name> -t 100
+sbgraph graph -t 100
 ```
 
 Graphviz dot file will be created at `<WorkDir>/<project name>.dot`.
+
+### Visualize with Graphviz
+
+You can generate graph image with dot command. e.g.
+
+```
+dot <project name>.dot -Tsvg -Kfdp -Goverlap=prism -<project name>.svg
+```

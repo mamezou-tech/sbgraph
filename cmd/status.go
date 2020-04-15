@@ -16,7 +16,7 @@ var statusCmd = &cobra.Command{
 
 		  sbgraph status
 
-		Show config file used and current settings.
+		Config file path and current settings will be printed
 	`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doStatus(cmd)
