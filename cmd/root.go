@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -54,44 +54,36 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
-		home, err := homedir.Dir()
-		CheckErr(err)
-		confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
-		viper.SetConfigFile(confPath)
-	}
+	configPath := getConfigPath()
 
+	viper.SetConfigFile(configPath)
 	viper.AutomaticEnv() // read in environment variables that match
-
 	// Read config file in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Printf("Using config file: %s\n", viper.ConfigFileUsed())
 		err := viper.Unmarshal(&config)
 		CheckErr(err)
 	}
-	SaveConfigAs()
-}
-
-func SaveConfigAs() {
-	home, err := homedir.Dir()
-	CheckErr(err)
-	confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
-	if err := viper.SafeWriteConfigAs(confPath); err != nil {
+	if err := viper.SafeWriteConfigAs(configPath); err != nil {
 		if os.IsNotExist(err) {
-			err = viper.WriteConfigAs(confPath)
+			err = viper.WriteConfigAs(configPath)
 			CheckErr(err)
 		}
 	}
 }
 
-func SaveConfig() {
+func getConfigPath() string {
+	if cfgFile != "" {
+		return cfgFile
+	}
 	home, err := homedir.Dir()
 	CheckErr(err)
 	confPath := filepath.FromSlash(home + "/.sbgraph.yaml")
-	viper.SetConfigFile(confPath)
-	err = viper.WriteConfig()
+	return confPath
+}
+
+// SaveConfig will save config and reload to config
+func SaveConfig() {
+	err := viper.WriteConfig()
 	CheckErr(err)
 	if err = viper.ReadInConfig(); err == nil {
 		fmt.Println("reload config file:", viper.ConfigFileUsed())

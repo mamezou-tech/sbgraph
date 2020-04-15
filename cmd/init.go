@@ -28,7 +28,7 @@ func init() {
 }
 
 func doInit(cmd *cobra.Command) {
-	fmt.Printf("Check and create workdir : %s", config.WorkDir)
+	fmt.Printf("Check and create workdir : %s\n", config.WorkDir)
 	err := file.CreateDir(config.WorkDir)
 	CheckErr(err)
 }
