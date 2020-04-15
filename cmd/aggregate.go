@@ -40,6 +40,7 @@ type contribute struct {
 
 func doAggregate(cmd *cobra.Command) {
 	projectName := config.CurrentProject
+	CheckProject(projectName)
 	fmt.Printf("Aggregate project : %s\n", projectName)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)

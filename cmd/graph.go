@@ -35,6 +35,7 @@ func init() {
 
 func buildGraph(cmd *cobra.Command) {
 	projectName := config.CurrentProject
+	CheckProject(projectName)
 	threshold, _ := cmd.PersistentFlags().GetInt("threshold")
 	includeUser, _ := cmd.PersistentFlags().GetBool("include")
 	anonymize, _ := cmd.PersistentFlags().GetBool("anonymize")

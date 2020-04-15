@@ -36,6 +36,7 @@ func init() {
 
 func doFetch(cmd *cobra.Command) {
 	projectName := config.CurrentProject
+	CheckProject(projectName)
 	project, err := fetchIndex(projectName)
 	CheckErr(err)
 	fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
