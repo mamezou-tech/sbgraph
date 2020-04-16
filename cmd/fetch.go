@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kondoumh/sbgraph/pkg/file"
+	"github.com/mamezou-tech/sbgraph/pkg/file"
 
-	"github.com/kondoumh/sbgraph/pkg/api"
-	"github.com/kondoumh/sbgraph/pkg/types"
+	"github.com/mamezou-tech/sbgraph/pkg/api"
+	"github.com/mamezou-tech/sbgraph/pkg/types"
 	"github.com/spf13/cobra"
 )
 

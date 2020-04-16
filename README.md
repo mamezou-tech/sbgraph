@@ -1,7 +1,7 @@
 # sbgraph
 
-![Go](https://github.com/kondoumh/sbgraph/workflows/Go/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kondoumh/sbgraph)](https://goreportcard.com/report/github.com/kondoumh/sbgraph)
+![Go](https://github.com/mamezou-tech/sbgraph/workflows/Go/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mamezou-tech/sbgraph)](https://goreportcard.com/report/github.com/mamezou-tech/sbgraph)
 
 sbgraph is a CLI for fetching and visualizing data from [Scrapbox](https://scrapbox.io) project.
 
@@ -15,11 +15,11 @@ sbgraph is a CLI for fetching and visualizing data from [Scrapbox](https://scrap
 ## Installing
 
 ```
-go get -u github.com/kondoumh/sbgraph
+go get -u github.com/mamezou-tech/sbgraph
 ```
 or
 ```
-curl -LO https://github.com/kondoumh/sbgraph/releases/download/<version>/sbgraph-<platform>-amd64.tar.gz
+curl -LO https://github.com/mamezou-tech/sbgraph/releases/download/<version>/sbgraph-<platform>-amd64.tar.gz
 tar xvf sbgraph-<platform>-amd64.tar.gz
 sudo mv sbgraph /usr/local/bin
 ```
