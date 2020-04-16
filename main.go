@@ -1,6 +1,6 @@
 package main
 
-import "github.com/kondoumh/sbgraph/cmd"
+import "github.com/mamezou-tech/sbgraph/cmd"
 
 func main() {
 	cmd.Execute()

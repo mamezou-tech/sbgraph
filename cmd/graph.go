@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kondoumh/sbgraph/pkg/types"
+	"github.com/mamezou-tech/sbgraph/pkg/types"
 	"github.com/mzohreva/GoGraphviz/graphviz"
 	"github.com/spf13/cobra"
 )

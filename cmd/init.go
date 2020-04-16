@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/kondoumh/sbgraph/pkg/file"
+	"github.com/mamezou-tech/sbgraph/pkg/file"
 	"github.com/spf13/cobra"
 )
 

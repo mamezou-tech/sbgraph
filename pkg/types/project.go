@@ -3,7 +3,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/kondoumh/sbgraph/pkg/file"
+	"github.com/mamezou-tech/sbgraph/pkg/file"
 )
 
 // Project represents a Scrapbox project

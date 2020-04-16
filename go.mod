@@ -1,11 +1,10 @@
-module github.com/kondoumh/sbgraph
+module github.com/mamezou-tech/sbgraph
 
 go 1.13
 
 require (
 	github.com/MakeNowJust/heredoc/v2 v2.0.1
 	github.com/cheggaaa/pb/v3 v3.0.4
-	github.com/kondoumh/scrapbox-viz v0.1.0-rc1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mzohreva/GoGraphviz v0.0.0-20180226085351-533f4a37d9c6
 	github.com/spf13/cobra v0.0.6
