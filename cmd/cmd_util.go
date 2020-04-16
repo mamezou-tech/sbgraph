@@ -23,6 +23,7 @@ func LongUsage(s string) string {
 	return heredoc.Doc(s)
 }
 
+// CheckProject will check project name is not empty
 func CheckProject(projectName string) {
 	if projectName == "" {
 		fmt.Fprintln(os.Stderr, "Project name not set. execute `sbgraph project -p <project name>`")
