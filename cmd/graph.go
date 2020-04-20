@@ -12,23 +12,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type page struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+}
+
+type user struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type pageLink struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+}
+
+type userPage struct {
+	UserID string `json:"user"`
+	PageID string `json:"page"`
+}
+
 type projectGraph struct {
-	Pages []struct {
-		ID    string `json:"id"`
-		Title string `json:"title"`
-	} `json:"pages"`
-	Users []struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	} `json:"users"`
-	Links []struct {
-		From string `json:"from"`
-		To   string `json:"to"`
-	} `json:"links"`
-	UserPages []struct {
-		UserID string `json:"user"`
-		PageID string `json:"page"`
-	} `json:"userPages"`
+	Pages     []page     `json:"pages"`
+	Users     []user     `json:"users"`
+	Links     []pageLink `json:"links"`
+	UserPages []userPage `json:"userPages"`
 }
 
 // graphCmd represents the graph command
@@ -99,11 +107,7 @@ func buildGraph(cmd *cobra.Command) {
 	for _, p := range pages {
 		gid := graph.AddNode(p.Title)
 		pNodes[p.ID] = gid
-		pGraph.Pages = append(pGraph.Pages,
-			struct {
-				ID    string `json:"id"`
-				Title string `json:"title"`
-			}{p.ID, p.Title})
+		pGraph.Pages = append(pGraph.Pages, page{p.ID, p.Title})
 	}
 	uNodes := map[string]int{}
 	if includeUser {
@@ -120,11 +124,7 @@ func buildGraph(cmd *cobra.Command) {
 			gid := graph.AddNode(username)
 			graph.NodeAttribute(gid, graphviz.FillColor, "cyan")
 			uNodes[u.ID] = gid
-			pGraph.Users = append(pGraph.Users,
-				struct {
-					ID   string `json:"id"`
-					Name string `json:"name"`
-				}{u.ID, username})
+			pGraph.Users = append(pGraph.Users, user{u.ID, username})
 		}
 	}
 	for _, p := range pages {
@@ -133,11 +133,7 @@ func buildGraph(cmd *cobra.Command) {
 			lid, contains := pNodes[link.ID]
 			if contains {
 				graph.AddEdge(pid, lid, "")
-				pGraph.Links = append(pGraph.Links,
-					struct {
-						From string `json:"from"`
-						To   string `json:"to"`
-					}{p.ID, link.ID})
+				pGraph.Links = append(pGraph.Links, pageLink{p.ID, link.ID})
 			}
 		}
 	}
@@ -148,11 +144,7 @@ func buildGraph(cmd *cobra.Command) {
 				pid, contains := pNodes[c]
 				if contains {
 					graph.AddEdge(uid, pid, "")
-					pGraph.UserPages = append(pGraph.UserPages,
-						struct {
-							UserID string `json:"user"`
-							PageID string `json:"page"`
-						}{u.ID, c})
+					pGraph.UserPages = append(pGraph.UserPages, userPage{u.ID, c})
 				}
 			}
 		}
