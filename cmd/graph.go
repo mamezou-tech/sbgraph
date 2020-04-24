@@ -60,6 +60,7 @@ func init() {
 	graphCmd.PersistentFlags().BoolP("include", "i", false, "Include user node")
 	graphCmd.PersistentFlags().BoolP("anonymize", "a", false, "Anonymize user")
 	graphCmd.PersistentFlags().BoolP("json", "j", false, "Output as JSON format")
+	graphCmd.PersistentFlags().BoolP("image", "m", false, "Output SVG image")
 
 	rootCmd.AddCommand(graphCmd)
 }
@@ -70,8 +71,10 @@ func buildGraph(cmd *cobra.Command) {
 	threshold, _ := cmd.PersistentFlags().GetInt("threshold")
 	includeUser, _ := cmd.PersistentFlags().GetBool("include")
 	anonymize, _ := cmd.PersistentFlags().GetBool("anonymize")
-	oJson, _ := cmd.PersistentFlags().GetBool("json")
-	fmt.Printf("Build graph project : %s, threshold : %d, include user: %t, anonymize : %t, json : %t\n", projectName, threshold, includeUser, anonymize, oJson)
+	oJSON, _ := cmd.PersistentFlags().GetBool("json")
+	oSVG, _ := cmd.PersistentFlags().GetBool("image")
+
+	fmt.Printf("Build graph project : %s, threshold : %d, include user: %t, anonymize : %t, json : %t, svg : %t\n", projectName, threshold, includeUser, anonymize, oJSON, oSVG)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
 	CheckErr(err)
@@ -151,9 +154,13 @@ func buildGraph(cmd *cobra.Command) {
 	}
 	err = writeDot(graph, projectName, config.WorkDir)
 	CheckErr(err)
-	if oJson {
+	if oJSON {
 		data, _ := json.Marshal(pGraph)
 		err = file.WriteBytes(data, projectName+"_graph.json", config.WorkDir)
+		CheckErr(err)
+	}
+	if oSVG {
+		err = writeSvg(graph, projectName, config.WorkDir)
 		CheckErr(err)
 	}
 }
@@ -184,4 +191,9 @@ func writeDot(graph graphviz.Graph, projectName string, workDir string) error {
 	defer file.Close()
 	graph.GenerateDOT(file)
 	return nil
+}
+
+func writeSvg(graph graphviz.Graph, projectName string, workDir string) error {
+	path := fmt.Sprintf("%s/%s.svg", workDir, projectName)
+	return graph.GenerateImage("dot", path, "svg")
 }
