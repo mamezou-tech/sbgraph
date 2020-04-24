@@ -83,9 +83,9 @@ sbgraph fetch
 
 To fetch from a private project, you needs to set the cookie to environment variables.
 
-```bash
-$ export SB_COOKIE_ID=connect.sid
-$ export SB_COOKIE_VALUE=your-fancy-cookie
+```
+export SB_COOKIE_ID=connect.sid
+export SB_COOKIE_VALUE=your-fancy-cookie
 ```
 
 ### Aggregate user activites in the project
@@ -129,9 +129,26 @@ sbgraph graph -t 100
 
 Graphviz dot file will be created at `<WorkDir>/<project name>.dot`.
 
+
+To generate graph data as JSON, specify -j(--json) flag.
+
+```
+sbgraph graph -j=true
+```
+
+To generate graph Image as SVG format, specify -m(--image) flag.
+
+```
+sbgraph graph -m=true
+```
+
+Graphviz needs to be installed. You can not specify layout engine.
+
 ### Visualize with Graphviz
 
-You can generate graph image with dot command. e.g.
+You can generate SVG with graph sub command, but to specify more options such as layout engine, you can use dot command directly.
+
+e.g.
 
 ```
 dot <project name>.dot -Tsvg -Kfdp -Goverlap=prism -<project name>.svg
