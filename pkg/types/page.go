@@ -10,10 +10,14 @@ import (
 type Page struct {
 	ID            string `json:"id"`
 	Title         string `json:"title"`
+	Created       int32  `json:"created"`
+	Updated       int32  `json:"updated"`
+	Pin           int64  `json:"pin"`
 	Views         int    `json:"views"`
 	Linked        int    `json:"linked"`
 	Author        User   `json:"user"`
 	Collaborators []User `json:"collaborators"`
+	Image         string `json:"image"`
 	Related       struct {
 		Links []struct {
 			ID    string `json:"id"`
