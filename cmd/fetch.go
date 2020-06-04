@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const timeLayout = "2006-01-02 15:04"
+
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "Fetch all pages of the project",
@@ -87,6 +89,8 @@ func fetchPageList(project types.Project) error {
 		}
 	}
 	project.Pages = pages
+	jst, _ := time.LoadLocation("Asia/Tokyo")
+	project.Date = time.Now().In(jst).Format(timeLayout)
 	data, _ := json.Marshal(project)
 	if err := file.WriteBytes(data, project.Name+".json", config.WorkDir); err != nil {
 		return err

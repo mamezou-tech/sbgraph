@@ -9,6 +9,7 @@ import (
 // Project represents a Scrapbox project
 type Project struct {
 	Name  string `json:"projectName"`
+	Date  string `json:"date"`
 	Count int    `json:"count"`
 	Skip  int    `json:"skip"`
 	Pages []Page `json:"pages"`
