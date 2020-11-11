@@ -33,30 +33,49 @@ var fetchCmd = &cobra.Command{
 }
 
 func init() {
+	fetchCmd.PersistentFlags().BoolP(
+		"latest", "l", false,
+		"Fetch latest list. Individual pages are not retrieved.")
 	rootCmd.AddCommand(fetchCmd)
 }
 
 func doFetch(cmd *cobra.Command) {
+	latest, _ := cmd.PersistentFlags().GetBool("latest")
 	projectName := config.CurrentProject
 	CheckProject(projectName)
-	project, err := fetchIndex(projectName)
-	CheckErr(err)
-	fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
-	err = fetchPageList(project)
-	CheckErr(err)
-	groups, err := dividePagesList(3, projectName)
-	CheckErr(err)
+	if latest {
+		fetchLatestList(api.Limit, projectName)
+	} else {
+		project, err := fetchIndex(projectName)
+		CheckErr(err)
+		fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
+		err = fetchPageList(project)
+		CheckErr(err)
+		groups, err := dividePagesList(3, projectName)
+		CheckErr(err)
+		path := fmt.Sprintf("%s/%s", config.WorkDir, projectName)
+		file.CreateDir(path)
+		var wg sync.WaitGroup
+		start := time.Now()
+		wg.Add(len(groups))
+		for _, pages := range groups {
+			go fetchPagesByGroup(projectName, pages, &wg)
+		}
+		wg.Wait()
+		elapsed := time.Since(start)
+		fmt.Printf("took %s\n", elapsed)
+	}
+}
+
+func fetchLatestList(num int, projectName string) {
+	fmt.Printf("fetch top %d of %s\n", num, projectName)
 	path := fmt.Sprintf("%s/%s", config.WorkDir, projectName)
 	file.CreateDir(path)
-	var wg sync.WaitGroup
-	start := time.Now()
-	wg.Add(len(groups))
-	for _, pages := range groups {
-		go fetchPagesByGroup(projectName, pages, &wg)
-	}
-	wg.Wait()
-	elapsed := time.Since(start)
-	fmt.Printf("took %s\n", elapsed)
+	var proj types.Project
+	proj.Name = projectName
+	proj.Count = num
+	err := fetchPageList(proj)
+	CheckErr(err)
 }
 
 func fetchIndex(projectName string) (types.Project, error) {
