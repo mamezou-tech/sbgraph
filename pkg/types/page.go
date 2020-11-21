@@ -34,6 +34,16 @@ type User struct {
 	PagesCreated []string
 }
 
+// Contribution represents summary of the user's contribution
+type Contribution struct {
+	UserID            string `json:"userId"`
+	UserName          string `json:"userName"`
+	PagesCreated      int    `json:"pagesCreated"`
+	PagesContributed  int    `json:"pagesContributed"`
+	ViewsCreatedPages int    `json:"viewsCreatedPages"`
+	LinksCreatedPages int    `json:"linksCreatedPages"`
+}
+
 // ReadFrom will deserialize Project from file
 func (page *Page) ReadFrom(projectName string, id string, workDir string) error {
 	bytes, err := file.ReadBytes(id+".json", workDir+"/"+projectName)
