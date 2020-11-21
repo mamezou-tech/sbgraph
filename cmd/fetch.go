@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
+	"os"
 
 	"github.com/mamezou-tech/sbgraph/pkg/file"
 
@@ -107,6 +108,17 @@ func fetchPageList(project types.Project) error {
 			pages = append(pages, page)
 		}
 	}
+	contrib, err := readContrib()
+	if err != nil {
+		return err
+	}
+	for idx, page := range pages {
+		u, contains := contrib[page.Author.ID]
+		if contains {
+			pages[idx].Author.Name = u.UserName
+			pages[idx].Author.DisplayName = u.UserName
+		}
+	}
 	project.Pages = pages
 	jst, _ := time.LoadLocation("Asia/Tokyo")
 	project.Date = time.Now().In(jst).Format(timeLayout)
@@ -115,6 +127,19 @@ func fetchPageList(project types.Project) error {
 		return err
 	}
 	return nil
+}
+
+func readContrib() (map[string]types.Contribution, error) {
+	contrib := map[string]types.Contribution{}
+	bytes, err := file.ReadBytes(config.CurrentProject + "_contrib.json", config.WorkDir);
+	if os.IsNotExist(err) {
+		return contrib, nil
+	}
+	if err != nil {
+		return contrib, err
+	}
+	err = json.Unmarshal(bytes, &contrib)
+	return contrib, err
 }
 
 func dividePagesList(multiplicity int, projectName string) ([][]types.Page, error) {
