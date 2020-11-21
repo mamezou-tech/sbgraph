@@ -34,15 +34,6 @@ func init() {
 	rootCmd.AddCommand(aggregateCmd)
 }
 
-type contribute struct {
-	UserID            string
-	UserName          string
-	PagesCreated      int
-	PagesContributed  int
-	ViewsCreatedPages int
-	LinksCreatedPages int
-}
-
 func doAggregate(cmd *cobra.Command) {
 	csv, _ := cmd.PersistentFlags().GetBool("csv")
 	projectName := config.CurrentProject
@@ -51,7 +42,7 @@ func doAggregate(cmd *cobra.Command) {
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
 	CheckErr(err)
-	contrib := map[string]contribute{}
+	contrib := map[string]types.Contribution{}
 	bar := pb.StartNew(proj.Count)
 	for _, idx := range proj.Pages {
 		var page types.Page
@@ -64,7 +55,7 @@ func doAggregate(cmd *cobra.Command) {
 			p.LinksCreatedPages += page.Linked
 			contrib[page.Author.ID] = p
 		} else {
-			c := contribute{
+			c := types.Contribution{
 				UserID:            page.Author.ID,
 				UserName:          page.Author.DisplayName,
 				PagesContributed:  1,
@@ -79,7 +70,7 @@ func doAggregate(cmd *cobra.Command) {
 				p.PagesContributed++
 				contrib[user.ID] = p
 			} else {
-				c := contribute{
+				c := types.Contribution{
 					UserID:           user.ID,
 					UserName:         user.DisplayName,
 					PagesContributed: 1,
@@ -94,16 +85,16 @@ func doAggregate(cmd *cobra.Command) {
 	CheckErr(err)
 }
 
-func writeContrib(projectName string, contrib map[string]contribute, csv bool) error {
+func writeContrib(projectName string, contrib map[string]types.Contribution, csv bool) error {
 	if csv {
-		path := fmt.Sprintf("%s/%s_ag.csv", config.WorkDir, projectName)
+		path := fmt.Sprintf("%s/%s_contrib.csv", config.WorkDir, projectName)
 		fmt.Println(path)
 		file, err := os.Create(path)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
-		file.Write(([]byte)("User Name,Pages Created,Pages Contributed,Views of Created Pages,Links of Created Pages\n"))
+		file.Write(([]byte)("User ID, User Name,Pages Created,Pages Contributed,Views of Created Pages,Links of Created Pages\n"))
 		for _, v := range contrib {
 			data := fmt.Sprintf("%s,%s,%d,%d,%d,%d\n", v.UserID, v.UserName, v.PagesCreated, v.PagesContributed, v.ViewsCreatedPages, v.LinksCreatedPages)
 			_, err = file.Write(([]byte)(data))
@@ -113,7 +104,7 @@ func writeContrib(projectName string, contrib map[string]contribute, csv bool) e
 		}
 	} else {
 		data, _ := json.Marshal(contrib)
-		if err := file.WriteBytes(data, projectName+"_ag.json", config.WorkDir); err != nil {
+		if err := file.WriteBytes(data, projectName+"_contrib.json", config.WorkDir); err != nil {
 			return err
 		}	
 	}
