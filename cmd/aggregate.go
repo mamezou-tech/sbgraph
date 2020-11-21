@@ -106,7 +106,7 @@ func writeContrib(projectName string, contrib map[string]types.Contribution, csv
 		data, _ := json.Marshal(contrib)
 		if err := file.WriteBytes(data, projectName+"_contrib.json", config.WorkDir); err != nil {
 			return err
-		}	
+		}
 	}
 	return nil
 }

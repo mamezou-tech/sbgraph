@@ -3,9 +3,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"sync"
 	"time"
-	"os"
 
 	"github.com/mamezou-tech/sbgraph/pkg/file"
 
@@ -131,7 +131,7 @@ func fetchPageList(project types.Project) error {
 
 func readContrib() (map[string]types.Contribution, error) {
 	contrib := map[string]types.Contribution{}
-	bytes, err := file.ReadBytes(config.CurrentProject + "_contrib.json", config.WorkDir);
+	bytes, err := file.ReadBytes(config.CurrentProject+"_contrib.json", config.WorkDir)
 	if os.IsNotExist(err) {
 		return contrib, nil
 	}
