@@ -13,8 +13,10 @@ import (
 )
 
 type page struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
+	ID     string `json:"id"`
+	Title  string `json:"title"`
+	Views  int    `json:"views"`
+	Linked int    `json:"linked"`
 }
 
 type user struct {
@@ -110,7 +112,7 @@ func buildGraph(cmd *cobra.Command) {
 	for _, p := range pages {
 		gid := graph.AddNode(p.Title)
 		pNodes[p.ID] = gid
-		pGraph.Pages = append(pGraph.Pages, page{p.ID, p.Title})
+		pGraph.Pages = append(pGraph.Pages, page{p.ID, p.Title, p.Views, p.Linked})
 	}
 	uNodes := map[string]int{}
 	if includeUser {
