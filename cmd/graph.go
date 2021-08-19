@@ -117,6 +117,11 @@ func buildGraph(cmd *cobra.Command) {
 	}
 	uNodes := map[string]int{}
 	if includeUser {
+		var authors types.Authors
+		if (file.Exists(projectName + "_authors.json", config.WorkDir)) {
+			err := authors.ReadFrom(projectName, config.WorkDir)
+			CheckErr(err)
+		}
 		for _, u := range users {
 			if len(u.PagesCreated) == 0 {
 				continue
@@ -125,7 +130,18 @@ func buildGraph(cmd *cobra.Command) {
 			if anonymize {
 				username = u.ID[5:10]
 			} else {
-				username = u.DisplayName
+				if len(authors.Authors) > 0 {
+					for _, a := range authors.Authors {
+						if u.ID == a.ID {
+							username = a.Name
+						}
+					}
+					if username == "" {
+						username = u.DisplayName
+					}
+				} else {
+					username = u.DisplayName
+				}
 			}
 			gid := graph.AddNode(username)
 			graph.NodeAttribute(gid, graphviz.FillColor, "cyan")
