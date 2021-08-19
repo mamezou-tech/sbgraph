@@ -136,7 +136,24 @@ To generate graph data as JSON, specify -j(--json) flag.
 sbgraph graph -j=true
 ```
 
-To generate graph Image as SVG format, specify -m(--image) flag.
+If you want replace the output username to something else, create the `<WorkDir>/<project name>_authors.json` file as follows. The `id` must match what actually exists.
+
+```json
+{
+  "authors": [
+    {
+      "id": "5b123abcdeefe345689seded",
+      "name": "Alice"
+    },
+    {
+      "id": "5d3435ddfdaab341234dedea",
+      "name": "Bob"
+    }
+  ]
+}
+```
+
+To generate graph image as SVG format, specify -m(--image) flag.
 
 ```
 sbgraph graph -m=true

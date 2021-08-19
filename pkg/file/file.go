@@ -42,3 +42,9 @@ func ReadBytes(fileName string, outDir string) ([]byte, error) {
 	}
 	return raw, err
 }
+
+// Exists will check if the file exists
+func Exists(fileName string, outDir string) bool {
+	_, err := os.Stat(outDir + "/" + fileName)
+	return err == nil
+}
