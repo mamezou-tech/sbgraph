@@ -153,6 +153,12 @@ If you want replace the output username to something else, create the `<WorkDir>
 }
 ```
 
+IF you want extract tags from links of the page, create the `<WorkDir>/<project name>_tags.csv` file as follows. If the links or related page titles of the page match those words,they will be added as tag attributes.
+
+```
+word1,word2,word3
+```
+
 To generate graph image as SVG format, specify -m(--image) flag.
 
 ```

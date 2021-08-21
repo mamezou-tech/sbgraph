@@ -8,16 +8,17 @@ import (
 
 // Page represents a Scrapbox page
 type Page struct {
-	ID            string `json:"id"`
-	Title         string `json:"title"`
-	Created       int32  `json:"created"`
-	Updated       int32  `json:"updated"`
-	Pin           int64  `json:"pin"`
-	Views         int    `json:"views"`
-	Linked        int    `json:"linked"`
-	Author        User   `json:"user"`
-	Collaborators []User `json:"collaborators"`
-	Image         string `json:"image"`
+	ID            string   `json:"id"`
+	Title         string   `json:"title"`
+	Created       int32    `json:"created"`
+	Updated       int32    `json:"updated"`
+	Pin           int64    `json:"pin"`
+	Views         int      `json:"views"`
+	Linked        int      `json:"linked"`
+	Author        User     `json:"user"`
+	Collaborators []User   `json:"collaborators"`
+	Image         string   `json:"image"`
+	Tags          []string `json:"links"`
 	Related       struct {
 		Links []struct {
 			ID    string `json:"id"`

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/mamezou-tech/sbgraph/pkg/file"
 
@@ -13,11 +14,12 @@ import (
 )
 
 type page struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	Author string `json:"author"`
-	Views  int    `json:"views"`
-	Linked int    `json:"linked"`
+	ID     string   `json:"id"`
+	Title  string   `json:"title"`
+	Author string   `json:"author"`
+	Views  int      `json:"views"`
+	Linked int      `json:"linked"`
+	Tags   []string `json:"tags"`
 }
 
 type user struct {
@@ -110,15 +112,17 @@ func buildGraph(cmd *cobra.Command) {
 	graph := createGraph()
 	var pGraph projectGraph
 	pNodes := map[string]int{}
+	tags := readTagsFile(projectName, config.WorkDir)
 	for _, p := range pages {
 		gid := graph.AddNode(p.Title)
 		pNodes[p.ID] = gid
-		pGraph.Pages = append(pGraph.Pages, page{p.ID, p.Title, p.Author.ID, p.Views, p.Linked})
+		tags := extractTags(&p,tags)
+		pGraph.Pages = append(pGraph.Pages, page{p.ID, p.Title, p.Author.ID, p.Views, p.Linked, tags})
 	}
 	uNodes := map[string]int{}
 	if includeUser {
 		var authors types.Authors
-		if (file.Exists(projectName + "_authors.json", config.WorkDir)) {
+		if file.Exists(projectName+"_authors.json", config.WorkDir) {
 			err := authors.ReadFrom(projectName, config.WorkDir)
 			CheckErr(err)
 		}
@@ -182,6 +186,30 @@ func buildGraph(cmd *cobra.Command) {
 		err = writeSvg(graph, projectName, config.WorkDir)
 		CheckErr(err)
 	}
+}
+
+func readTagsFile(projectName string, dir string) []string {
+	if !file.Exists(projectName+"_tags.csv", dir) {
+		return []string{}
+	}
+	bytes, err := file.ReadBytes(projectName+"_tags.csv", dir)
+	CheckErr(err)
+	return strings.Split(string(bytes), ",")
+}
+
+func extractTags(page *types.Page, tagLinks []string) []string {
+	tags := []string{}
+	for _, l := range page.Related.Links {
+		if Contains(tagLinks, l.Title) && !Contains(tags, l.Title) {
+			tags = append(tags, l.Title)
+		}
+	}
+	for _, t := range page.Tags {
+		if Contains(tagLinks, t) && !Contains(tags, t) {
+			tags = append(tags, t)
+		}
+	}
+	return tags
 }
 
 func createGraph() graphviz.Graph {
