@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/MakeNowJust/heredoc/v2"
 )
@@ -31,10 +32,10 @@ func CheckProject(projectName string) {
 	}
 }
 
-// Contains will check if a string is present in a slice
+// Contains will check if a string is present in a slice ignoring case
 func Contains(s []string, str string) bool {
 	for _, v := range s {
-		if v == str {
+		if strings.ToLower(v) == strings.ToLower(str) {
 			return true
 		}
 	}
