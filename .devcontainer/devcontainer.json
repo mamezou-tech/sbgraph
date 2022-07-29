@@ -36,7 +36,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	"onCreateCommand": "apt-get install -y tig",
+	// "onCreateCommand": "apt-get install -y tig",
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "go version",
