@@ -23,7 +23,9 @@
 			"settings": { 
 				"go.toolsManagement.checkForUpdates": "local",
 				"go.useLanguageServer": true,
-				"go.gopath": "/go"
+				"go.gopath": "/go",
+				"editor.minimap.enabled": false,
+				"workbench.colorTheme": "Default Dark+"
 			},
 			
 			// Add the IDs of extensions you want installed when the container is created.
