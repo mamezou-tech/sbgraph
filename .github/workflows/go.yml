@@ -27,14 +27,16 @@ jobs:
       run: |
         GOOS=linux GOARCH=amd64 go build -o build/linux/sbgraph main.go
         GOOS=windows GOARCH=amd64 go build -o build/windows/sbgraph.exe main.go
-        GOOS=darwin GOARCH=amd64 go build -o build/macos/sbgraph main.go
+        GOOS=darwin GOARCH=amd64 go build -o build/macos-amd64/sbgraph main.go
+        GOOS=darwin GOARCH=arm64 go build -o build/macos-arm64/sbgraph main.go
 
     - name: Archive
       if: startsWith(github.ref, 'refs/tags/')
       run: |
         (cd build/linux && tar cfvz ../sbgraph-linux-amd64.tar.gz sbgraph)
         (cd build/windows && tar cfvz ../sbgraph-windows-amd64.tar.gz sbgraph.exe)
-        (cd build/macos && tar cfvz ../sbgraph-darwin-amd64.tar.gz sbgraph)
+        (cd build/macos-amd64 && tar cfvz ../sbgraph-darwin-amd64.tar.gz sbgraph)
+        (cd build/macos-arm64 && tar cfvz ../sbgraph-darwin-arm64.tar.gz sbgraph)
 
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
