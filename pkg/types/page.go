@@ -19,7 +19,14 @@ type Page struct {
 	Collaborators []User   `json:"collaborators"`
 	Image         string   `json:"image"`
 	Tags          []string `json:"links"`
-	Related       struct {
+	Lines         []struct {
+		ID      string `json:"id"`
+		Text    string `json:"text"`
+		UserID  string `json:"userId"`
+		Created int32  `json:"created"`
+		Updated int32  `json:"updated"`
+	} `json:"lines"`
+	Related struct {
 		Links []struct {
 			ID    string `json:"id"`
 			Title string `json:"title"`
