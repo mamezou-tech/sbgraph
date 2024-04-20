@@ -41,3 +41,11 @@ func Contains(s []string, str string) bool {
 	}
 	return false
 }
+
+// CheckArg will check if an argument is empty and print error message
+func CheckArg(arg string, name string) {
+	if arg == "" {
+		fmt.Fprintf(os.Stderr, "%s is required\n", name)
+		os.Exit(1)
+	}
+}
