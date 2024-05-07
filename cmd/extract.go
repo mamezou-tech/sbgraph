@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/cheggaaa/pb/v3"
@@ -12,9 +13,9 @@ import (
 )
 
 type pageSimple struct {
-	ID		string `json:"id"`
-	Title	string `json:"title"`
-	Lines	[]string `json:"lines"`
+	ID    string   `json:"id"`
+	Title string   `json:"title"`
+	Lines []string `json:"lines"`
 }
 
 // extractCmd represents the extract command
@@ -23,47 +24,51 @@ var extractCmd = &cobra.Command{
 	Short: "Extract from downloaded JSON files",
 	Long: LongUsage(`Extract from downloaded JSON files that matches passed tag.
 
-  	sbgraph extract -t tagname -o outputdir`),
+  	sbgraph extract -i "foo bar baz" -e "hoge huga"`),
 	Run: func(cmd *cobra.Command, args []string) {
-		doExtract(cmd);
+		doExtract(cmd)
 	},
 }
 
 func init() {
-	extractCmd.PersistentFlags().StringP("tag", "t", "", "Extract pages with the specified tag.")
-	extractCmd.PersistentFlags().StringP("suffix", "s", "", "suffix for output directory")
+	extractCmd.PersistentFlags().StringP("includes", "i", "", "Words for extracting pages(space delimited).")
+	extractCmd.PersistentFlags().StringP("excludes", "e", "", "Words to exclude when extracting pages(space delimited).")
+	extractCmd.PersistentFlags().StringP("suffix", "s", "extracted", "suffix for output directory")
 	rootCmd.AddCommand(extractCmd)
 }
 
 func doExtract(cmd *cobra.Command) {
 	projectName := config.CurrentProject
 	CheckProject(projectName)
-	tag, _ := cmd.PersistentFlags().GetString("tag")
+	tagsStr, _ := cmd.PersistentFlags().GetString("tags")
+	excludesStr, _ := cmd.PersistentFlags().GetString("excludes")
 	suffix, _ := cmd.PersistentFlags().GetString("suffix")
-	CheckArg(tag, "tag");
-	CheckArg(suffix, "suffix");
 
-	fmt.Printf("Extract files : %s, tag : %s\n", projectName, tag)
+	includes := strings.Split(tagsStr, " ")
+	excludes := strings.Split(excludesStr, " ")
+	outputDir := projectName + "-" + suffix
+
+	fmt.Printf("Extract files : %s, tags : %s, excludes : %s, output: %s\n", projectName, includes, excludes, outputDir)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
 	CheckErr(err)
 
 	bar := pb.StartNew(proj.Count)
 
-	outputDir := config.WorkDir + "/" + projectName + "-" + suffix
-	file.CreateDir(outputDir)
+	outputPath := config.WorkDir + "/" + outputDir
+	file.CreateDir(outputPath)
 	for _, idx := range proj.Pages {
 		var page types.Page
 		err := page.ReadFrom(projectName, idx.ID, config.WorkDir)
 		CheckErr(err)
-		result := containsTag(toLines(&page), tag)
+		result := isExtractable(toLines(&page), includes, excludes)
 		if result {
 			var simplePage pageSimple
 			simplePage.ID = page.ID
 			simplePage.Title = page.Title
 			simplePage.Lines = toLines(&page)
 			data, _ := json.Marshal(simplePage)
-			err = file.WriteBytes(data, simplePage.ID+".json", outputDir)
+			err = file.WriteBytes(data, simplePage.ID+".json", outputPath)
 			CheckErr(err)
 		}
 		bar.Increment()
@@ -79,10 +84,26 @@ func toLines(page *types.Page) []string {
 	return lines
 }
 
-func containsTag(lines []string, tag string) bool {
-	for _, line := range lines {
-		if strings.Contains(line, tag) {
-			return true
+func isExtractable(lines []string, includes []string, excludes []string) bool {
+	if len(excludes) > 0 {
+		for _, exclude := range excludes {
+			re := regexp.MustCompile(exclude)
+			for _, line := range lines {
+				if re.MatchString(line) {
+					return false
+				}
+			}
+		}
+	}
+	if len(includes) == 0 {
+		return true
+	}
+	for _, include := range includes {
+		re := regexp.MustCompile(include)
+		for _, line := range lines {
+			if re.MatchString(line) {
+				return true
+			}
 		}
 	}
 	return false
