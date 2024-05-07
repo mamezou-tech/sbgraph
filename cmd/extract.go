@@ -85,7 +85,7 @@ func toLines(page *types.Page) []string {
 }
 
 func isExtractable(lines []string, includes []string, excludes []string) bool {
-	if len(excludes) > 0 {
+	if !isEmpty(excludes) {
 		for _, exclude := range excludes {
 			re := regexp.MustCompile(exclude)
 			for _, line := range lines {
@@ -95,7 +95,7 @@ func isExtractable(lines []string, includes []string, excludes []string) bool {
 			}
 		}
 	}
-	if len(includes) == 0 {
+	if isEmpty(includes) {
 		return true
 	}
 	for _, include := range includes {
@@ -107,4 +107,8 @@ func isExtractable(lines []string, includes []string, excludes []string) bool {
 		}
 	}
 	return false
+}
+
+func isEmpty(arr []string) bool {
+	return len(arr) == 0 || (len(arr) == 1 && arr[0] == "")
 }
