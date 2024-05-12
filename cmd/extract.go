@@ -13,9 +13,15 @@ import (
 )
 
 type pageSimple struct {
-	ID    string   `json:"id"`
-	Title string   `json:"title"`
-	Lines []string `json:"lines"`
+	ID      string   `json:"id"`
+	Title   string   `json:"title"`
+	Authors []author `json:"authors"`
+	Lines   []string `json:"lines"`
+}
+
+type author struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 // extractCmd represents the extract command
@@ -55,6 +61,12 @@ func doExtract(cmd *cobra.Command) {
 
 	bar := pb.StartNew(proj.Count)
 
+	var authors types.Authors
+	if file.Exists(projectName+"_authors.json", config.WorkDir) {
+		err := authors.ReadFrom(projectName, config.WorkDir)
+		CheckErr(err)
+	}
+
 	outputPath := config.WorkDir + "/" + outputDir
 	file.CreateDir(outputPath)
 	for _, idx := range proj.Pages {
@@ -66,6 +78,13 @@ func doExtract(cmd *cobra.Command) {
 			var simplePage pageSimple
 			simplePage.ID = page.ID
 			simplePage.Title = page.Title
+			simplePage.Authors = []author{}
+			displayName := getDisplayName(authors, page.Author.ID, page.Author.Name)
+			simplePage.Authors = append(simplePage.Authors, author{ID: page.Author.ID, Name: displayName})
+			for _, collaborator := range page.Collaborators {
+				displayName := getDisplayName(authors, collaborator.ID, collaborator.Name)
+				simplePage.Authors = append(simplePage.Authors, author{ID: collaborator.ID, Name: displayName})
+			}
 			simplePage.Lines = toLines(&page)
 			data, _ := json.Marshal(simplePage)
 			err = file.WriteBytes(data, simplePage.ID+".json", outputPath)
@@ -111,4 +130,15 @@ func isExtractable(lines []string, includes []string, excludes []string) bool {
 
 func isEmpty(arr []string) bool {
 	return len(arr) == 0 || (len(arr) == 1 && arr[0] == "")
+}
+
+func getDisplayName(authors types.Authors, id string, name string) string {
+	username := name
+	for _, a := range authors.Authors {
+		if id == a.ID {
+			username = a.Name
+			break
+		}
+	}
+	return username
 }
