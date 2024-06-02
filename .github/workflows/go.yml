@@ -11,9 +11,8 @@ jobs:
   build:
     permissions:
       id-token: write
-      contents: read
+      contents: write
       attestations: write
-      deployments: write
 
     name: Build
     runs-on: ubuntu-latest
