@@ -13,6 +13,7 @@ jobs:
       id-token: write
       contents: read
       attestations: write
+      deployments: write
 
     name: Build
     runs-on: ubuntu-latest
