@@ -50,7 +50,8 @@ func init() {
 	rootCmd.PersistentFlags().StringP("currentproject", "c", "", "current project")
 	viper.BindPFlag("workdir", rootCmd.PersistentFlags().Lookup("workdir"))
 	viper.BindPFlag("currentproject", rootCmd.PersistentFlags().Lookup("currentproject"))
-	config.WorkDir = wkdir
+	viper.SetDefault("workdir", wkdir)
+	syncConfigFromViper()
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -69,6 +70,12 @@ func initConfig() {
 			CheckErr(err)
 		}
 	}
+	syncConfigFromViper()
+}
+
+func syncConfigFromViper() {
+	config.WorkDir = viper.GetString("workdir")
+	config.CurrentProject = viper.GetString("currentproject")
 }
 
 func getConfigPath() string {
@@ -90,5 +97,6 @@ func SaveConfig() {
 		err := viper.Unmarshal(&config)
 		CheckErr(err)
 	}
+	syncConfigFromViper()
 	fmt.Printf("config update: %#v\n", config)
 }
