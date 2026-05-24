@@ -16,7 +16,7 @@ type Page struct {
 	Views         int      `json:"views"`
 	Linked        int      `json:"linked"`
 	Author        User     `json:"user"`
-	Collaborators []User   `json:"collaborators"`
+	Collaborators []User   `json:"users"`
 	Image         string   `json:"image"`
 	Tags          []string `json:"links"`
 	Lines         []struct {
@@ -32,6 +32,25 @@ type Page struct {
 			Title string `json:"title"`
 		} `json:"links1hop"`
 	} `json:"relatedPages"`
+}
+
+// UnmarshalJSON keeps backward compatibility with the older collaborators field
+// while preferring the current users field returned by Scrapbox APIs.
+func (page *Page) UnmarshalJSON(data []byte) error {
+	type alias Page
+	aux := struct {
+		Collaborators []User `json:"collaborators"`
+		*alias
+	}{
+		alias: (*alias)(page),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	if len(page.Collaborators) == 0 && len(aux.Collaborators) > 0 {
+		page.Collaborators = aux.Collaborators
+	}
+	return nil
 }
 
 // User represents a Scrapbox user
@@ -50,6 +69,11 @@ type Contribution struct {
 	PagesContributed  int    `json:"pagesContributed"`
 	ViewsCreatedPages int    `json:"viewsCreatedPages"`
 	LinksCreatedPages int    `json:"linksCreatedPages"`
+}
+
+// ProjectUsers represents project users returned by the Scrapbox project API.
+type ProjectUsers struct {
+	Users []User `json:"users"`
 }
 
 // ReadFrom will deserialize Project from file

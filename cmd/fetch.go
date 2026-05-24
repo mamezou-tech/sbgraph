@@ -44,13 +44,15 @@ func doFetch(cmd *cobra.Command) {
 	latest, _ := cmd.PersistentFlags().GetBool("latest")
 	projectName := config.CurrentProject
 	CheckProject(projectName)
+	projectUsers, err := fetchProjectUsers(projectName)
+	CheckErr(err)
 	if latest {
-		fetchLatestList(api.Limit, projectName)
+		fetchLatestList(api.Limit, projectName, projectUsers)
 	} else {
 		project, err := fetchIndex(projectName)
 		CheckErr(err)
 		fmt.Printf("fetch all pages, %s : %d\n", project.Name, project.Count)
-		err = fetchPageList(project)
+		err = fetchPageList(project, projectUsers)
 		CheckErr(err)
 		groups, err := dividePagesList(3, projectName)
 		CheckErr(err)
@@ -60,7 +62,7 @@ func doFetch(cmd *cobra.Command) {
 		start := time.Now()
 		wg.Add(len(groups))
 		for _, pages := range groups {
-			go fetchPagesByGroup(projectName, pages, &wg)
+			go fetchPagesByGroup(projectName, pages, projectUsers, &wg)
 		}
 		wg.Wait()
 		elapsed := time.Since(start)
@@ -68,15 +70,34 @@ func doFetch(cmd *cobra.Command) {
 	}
 }
 
-func fetchLatestList(num int, projectName string) {
+func fetchLatestList(num int, projectName string, projectUsers map[string]types.User) {
 	fmt.Printf("fetch top %d of %s\n", num, projectName)
 	path := fmt.Sprintf("%s/%s", config.WorkDir, projectName)
 	file.CreateDir(path)
 	var proj types.Project
 	proj.Name = projectName
 	proj.Count = num
-	err := fetchPageList(proj)
+	err := fetchPageList(proj, projectUsers)
 	CheckErr(err)
+}
+
+func fetchProjectUsers(projectName string) (map[string]types.User, error) {
+	data, err := api.FetchProjectUsers(projectName)
+	if err != nil {
+		return nil, err
+	}
+	var projectUsers types.ProjectUsers
+	if err := json.Unmarshal(data, &projectUsers); err != nil {
+		return nil, err
+	}
+	users := map[string]types.User{}
+	for _, user := range projectUsers.Users {
+		if user.DisplayName == "" {
+			user.DisplayName = user.Name
+		}
+		users[user.ID] = user
+	}
+	return users, nil
 }
 
 func fetchIndex(projectName string) (types.Project, error) {
@@ -92,7 +113,7 @@ func fetchIndex(projectName string) (types.Project, error) {
 	return project, nil
 }
 
-func fetchPageList(project types.Project) error {
+func fetchPageList(project types.Project, projectUsers map[string]types.User) error {
 	pages := []types.Page{}
 	for skip := 0; skip < project.Count; skip += api.Limit {
 		data, err := api.FetchPageList(project.Name, skip)
@@ -105,6 +126,7 @@ func fetchPageList(project types.Project) error {
 			return err
 		}
 		for _, page := range proj.Pages {
+			enrichPageUsers(&page, projectUsers)
 			pages = append(pages, page)
 		}
 	}
@@ -127,6 +149,19 @@ func fetchPageList(project types.Project) error {
 		return err
 	}
 	return nil
+}
+
+func enrichPageUsers(page *types.Page, projectUsers map[string]types.User) {
+	if user, ok := projectUsers[page.Author.ID]; ok {
+		page.Author.Name = user.Name
+		page.Author.DisplayName = user.DisplayName
+	}
+	for idx, collaborator := range page.Collaborators {
+		if user, ok := projectUsers[collaborator.ID]; ok {
+			page.Collaborators[idx].Name = user.Name
+			page.Collaborators[idx].DisplayName = user.DisplayName
+		}
+	}
 }
 
 func readContrib() (map[string]types.Contribution, error) {
@@ -168,19 +203,28 @@ func dividePagesList(multiplicity int, projectName string) ([][]types.Page, erro
 	return divided, nil
 }
 
-func fetchPagesByGroup(projectName string, pages []types.Page, wg *sync.WaitGroup) error {
+func fetchPagesByGroup(projectName string, pages []types.Page, projectUsers map[string]types.User, wg *sync.WaitGroup) error {
 	defer wg.Done()
 	for _, page := range pages {
 		fmt.Println(page.Title)
-		if err := fetchPage(projectName, page.Title, page.ID); err != nil {
+		if err := fetchPage(projectName, page.Title, page.ID, projectUsers); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func fetchPage(projectName string, title string, index string) error {
+func fetchPage(projectName string, title string, index string, projectUsers map[string]types.User) error {
 	data, err := api.FetchPage(projectName, title)
+	if err != nil {
+		return err
+	}
+	var page types.Page
+	if err := json.Unmarshal(data, &page); err != nil {
+		return err
+	}
+	enrichPageUsers(&page, projectUsers)
+	data, err = json.Marshal(page)
 	if err != nil {
 		return err
 	}

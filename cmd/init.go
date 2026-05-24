@@ -5,6 +5,7 @@ import (
 
 	"github.com/mamezou-tech/sbgraph/pkg/file"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -31,4 +32,6 @@ func doInit(cmd *cobra.Command) {
 	fmt.Printf("Check and create workdir : %s\n", config.WorkDir)
 	err := file.CreateDir(config.WorkDir)
 	CheckErr(err)
+	viper.Set("workdir", config.WorkDir)
+	SaveConfig()
 }

@@ -13,6 +13,7 @@ import (
 const Limit int = 100
 
 const baseURL string = "https://scrapbox.io/api/pages"
+const projectBaseURL string = "https://scrapbox.io/api/projects"
 
 // FetchPageList will fetch page list in the Scrapbox project
 func FetchPageList(projectName string, skip int) ([]byte, error) {
@@ -29,6 +30,12 @@ func FetchPage(projectName string, title string) ([]byte, error) {
 // FetchIndex will fetch index of the Scrapbox project
 func FetchIndex(projectName string) ([]byte, error) {
 	url := fmt.Sprintf("%s/%s?limit=1", baseURL, projectName)
+	return fetch(url)
+}
+
+// FetchProjectUsers will fetch project user list of the Scrapbox project.
+func FetchProjectUsers(projectName string) ([]byte, error) {
+	url := fmt.Sprintf("%s/%s/users", projectBaseURL, projectName)
 	return fetch(url)
 }
 
