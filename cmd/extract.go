@@ -28,17 +28,17 @@ type author struct {
 var extractCmd = &cobra.Command{
 	Use:   "extract",
 	Short: "Extract from downloaded JSON files",
-	Long: LongUsage(`Extract from downloaded JSON files that matches passed tag.
+	Long: LongUsage(`Extract from downloaded JSON files that match include/exclude patterns.
 
-  	sbgraph extract -i "foo bar baz" -e "hoge huga"`),
+	  sbgraph extract -i "foo bar baz" -e "hoge huga"`),
 	Run: func(cmd *cobra.Command, args []string) {
 		doExtract(cmd)
 	},
 }
 
 func init() {
-	extractCmd.PersistentFlags().StringP("includes", "i", "", "Words for extracting pages(space delimited).")
-	extractCmd.PersistentFlags().StringP("excludes", "e", "", "Words to exclude when extracting pages(space delimited).")
+	extractCmd.PersistentFlags().StringP("includes", "i", "", "Include patterns (space delimited).")
+	extractCmd.PersistentFlags().StringP("excludes", "e", "", "Exclude patterns (space delimited).")
 	extractCmd.PersistentFlags().StringP("suffix", "s", "extracted", "suffix for output directory")
 	rootCmd.AddCommand(extractCmd)
 }
@@ -46,15 +46,15 @@ func init() {
 func doExtract(cmd *cobra.Command) {
 	projectName := config.CurrentProject
 	CheckProject(projectName)
-	tagsStr, _ := cmd.PersistentFlags().GetString("tags")
+	includesStr, _ := cmd.PersistentFlags().GetString("includes")
 	excludesStr, _ := cmd.PersistentFlags().GetString("excludes")
 	suffix, _ := cmd.PersistentFlags().GetString("suffix")
 
-	includes := strings.Split(tagsStr, " ")
+	includes := strings.Split(includesStr, " ")
 	excludes := strings.Split(excludesStr, " ")
 	outputDir := projectName + "-" + suffix
 
-	fmt.Printf("Extract files : %s, tags : %s, excludes : %s, output: %s\n", projectName, includes, excludes, outputDir)
+	fmt.Printf("Extract files : %s, includes : %s, excludes : %s, output: %s\n", projectName, includes, excludes, outputDir)
 	var proj types.Project
 	err := proj.ReadFrom(projectName, config.WorkDir)
 	CheckErr(err)
